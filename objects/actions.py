@@ -716,10 +716,12 @@ class Actions(object):
 
         ''' Skip resume of queued playlist items and start them from the beginning
         '''
+        """
         playlist_pos = self.playlist_position(item)
         if int(playlist_pos) > 0:
             LOG.info("[ playlist/position %s ] skip resume dialog" % playlist_pos)
             return False
+        """
 
         ''' Base resume dialog based on Kodi settings.
         '''
