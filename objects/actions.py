@@ -652,7 +652,7 @@ class Actions(object):
         else:
             listitem.setArt({art: path})
 
-    def resume_dialog(self, seektime):
+    def resume_dialog(self, seektime, item):
 
         ''' Base resume dialog based on Kodi settings.
         '''
