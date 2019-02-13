@@ -60,8 +60,7 @@ class Actions(object):
             an existing one set.
         '''
         if xbmc.getCondVisibility('Player.HasMedia + !Window.IsVisible(fullscreenvideo)') and int(playlist_items) > 0:
-            # ANGEL --SUALFRED: CHANGED
-            return False
+            return True
 
         ''' Clear the pseudo-playlist that has been created by the library windows for a single
             video item. This is required to get the cinema mode working.
@@ -320,7 +319,7 @@ class Actions(object):
 
                 if 'SubtitleUrl' in item['PlaybackInfo']:
 
-                    #LOG.info("[ subtitles ] %s", item['PlaybackInfo']['SubtitleUrl'])
+                    LOG.info("[ subtitles ] %s", item['PlaybackInfo']['SubtitleUrl'])
                     listitem.setSubtitles([item['PlaybackInfo']['SubtitleUrl']])
 
                 if item['Type'] == 'Episode':
@@ -702,7 +701,7 @@ class Actions(object):
                 self._set_art(listitem, k_art, artwork.get(e_art, " "))
 
     def _set_art(self, listitem, art, path):
-        #LOG.debug(" [ art/%s ] %s", art, path)
+        LOG.debug(" [ art/%s ] %s", art, path)
 
         if art in ('fanart_image', 'small_poster', 'tiny_poster',
                    'medium_landscape', 'medium_poster', 'small_fanartimage',
