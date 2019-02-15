@@ -23,7 +23,7 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 class TVShows(KodiDb):
 
-    def __init__(self, server, embydb, videodb, direct_path, update_library=False):
+    def __init__(self, server, embydb, videodb, direct_path, update_library=False, *args, **kwargs):
 
         self.server = server
         self.emby = embydb
@@ -53,7 +53,7 @@ class TVShows(KodiDb):
     @stop()
     @emby_item()
     @library_check()
-    def tvshow(self, item, e_item, library):
+    def tvshow(self, item, e_item, library, *args, **kwargs):
 
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
@@ -222,7 +222,7 @@ class TVShows(KodiDb):
 
 
     @stop()
-    def season(self, item, show_id=None):
+    def season(self, item, show_id=None, *args, **kwargs):
 
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
@@ -256,7 +256,7 @@ class TVShows(KodiDb):
 
     @stop()
     @emby_item()
-    def episode(self, item, e_item):
+    def episode(self, item, e_item, *args, **kwargs):
 
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
@@ -450,7 +450,7 @@ class TVShows(KodiDb):
 
     @stop()
     @emby_item()
-    def userdata(self, item, e_item):
+    def userdata(self, item, e_item, *args, **kwargs):
         
         ''' This updates: Favorite, LastPlayedDate, Playcount, PlaybackPositionTicks
             Poster with progress bar
@@ -510,7 +510,7 @@ class TVShows(KodiDb):
 
     @stop()
     @emby_item()
-    def remove(self, item_id, e_item):
+    def remove(self, item_id, e_item, *args, **kwargs):
         
         ''' Remove showid, fileid, pathid, emby reference.
             There's no episodes left, delete show and any possible remaining seasons
@@ -612,7 +612,7 @@ class TVShows(KodiDb):
         LOG.info("DELETE episode [%s/%s] %s", file_id, kodi_id, item_id)
 
     @emby_item()
-    def get_child(self, item_id, e_item):
+    def get_child(self, item_id, e_item, *args, **kwargs):
 
         ''' Get all child elements from tv show emby id.
         '''
