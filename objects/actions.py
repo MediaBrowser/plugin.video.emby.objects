@@ -30,13 +30,13 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 class Actions(object):
 
-    def __init__(self, server_id=None, server=None):
+    def __init__(self, server_id=None, server=None, *args, **kwargs):
 
         self.server_id = server_id or None
         self.server = server or TheVoid('GetServerAddress', {'ServerId': self.server_id}).get()
         self.stack = []
 
-    def get_playlist(self, item):
+    def get_playlist(self, item, *args, **kwargs):
 
         if item['Type'] == 'Audio':
             return xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
@@ -44,7 +44,7 @@ class Actions(object):
         return xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
 
 
-    def detect_playlist(self, item):
+    def detect_playlist(self, item, *args, **kwargs):
 
         ''' Sometimes it's required to clear the playlist to get everything working together.
             Otherwise "Play from here" and cinema mode is going to break.
@@ -70,12 +70,12 @@ class Actions(object):
 
         return False
 
-    def playlist_position(self, item):
+    def playlist_position(self, item, *args, **kwargs):
 
         kodi_playlist = self.get_playlist(item)
         return kodi_playlist.getposition()
 
-    def play(self, item, db_id=None, transcode=False, playlist=False):
+    def play(self, item, db_id=None, transcode=False, playlist=False, *args, **kwargs):
 
         window('emby.context.widget', clear=True)
         clear_playlist = self.detect_playlist(item)
@@ -116,7 +116,7 @@ class Actions(object):
         LOG.info(JSONRPC('Playlist.GetItems').execute({'playlistid': 1}))
 
     @classmethod
-    def add_to_playlist(cls, db_id=None, media_type=None, url=None):
+    def add_to_playlist(cls, db_id=None, media_type=None, url=None, *args, **kwargs):
 
         params = {
             'playlistid': 1
@@ -125,7 +125,7 @@ class Actions(object):
         LOG.info(JSONRPC('Playlist.Add').execute(params))
 
     @classmethod
-    def insert_to_playlist(cls, position, db_id=None, media_type=None, url=None):
+    def insert_to_playlist(cls, position, db_id=None, media_type=None, url=None, *args, **kwargs):
 
         params = {
             'playlistid': 1,
@@ -134,7 +134,7 @@ class Actions(object):
         params['item'] = {'%sid' % media_type: int(db_id)} if db_id is not None else {'file': url}
         LOG.info(JSONRPC('Playlist.Insert').execute(params))
 
-    def set_playlist(self, item, listitem, db_id=None, transcode=False):
+    def set_playlist(self, item, listitem, db_id=None, transcode=False, *args, **kwargs):
 
         ''' Verify seektime, set intros, set main item and set additional parts.
             Detect the seektime for video type content.
@@ -177,7 +177,7 @@ class Actions(object):
         if item.get('PartCount'):
             self._set_additional_parts(item['Id'])
 
-    def _set_intros(self, item):
+    def _set_intros(self, item, *args, **kwargs):
 
         ''' if we have any play them when the movie/show is not being resumed.
         '''
@@ -210,7 +210,7 @@ class Actions(object):
 
                 window('emby.skip.%s' % intro['Id'], value="true")
 
-    def _set_additional_parts(self, item_id):
+    def _set_additional_parts(self, item_id, *args, **kwargs):
 
         ''' Create listitems and add them to the stack of playlist.
         '''
@@ -230,7 +230,7 @@ class Actions(object):
 
             self.stack.append([part['PlaybackInfo']['Path'], listitem, part['Id'], None])
 
-    def play_playlist(self, items, clear=True, seektime=None, audio=None, subtitle=None):
+    def play_playlist(self, items, clear=True, seektime=None, audio=None, subtitle=None, *args, **kwargs):
 
         ''' Play a list of items. Creates a new playlist. Add additional items as plugin listing.
         '''
@@ -281,7 +281,7 @@ class Actions(object):
             playlist.add(path, listitem, index)
             index += 1
 
-    def set_listitem(self, item, listitem, db_id=None, seektime=None, intro=False):
+    def set_listitem(self, item, listitem, db_id=None, seektime=None, intro=False, *args, **kwargs):
 
         objects = Objects()
         API = api.API(item, self.server)
@@ -335,7 +335,7 @@ class Actions(object):
 
         listitem.setContentLookup(False)
 
-    def listitem_video(self, obj, listitem, item, seektime=None, intro=False):
+    def listitem_video(self, obj, listitem, item, seektime=None, intro=False, *args, **kwargs):
 
         ''' Set listitem for video content. That also include streams.
         '''
@@ -524,7 +524,7 @@ class Actions(object):
         listitem.setInfo('video', metadata)
         listitem.setContentLookup(False)
 
-    def listitem_channel(self, obj, listitem, item):
+    def listitem_channel(self, obj, listitem, item, *args, **kwargs):
 
         ''' Set listitem for channel content.
         '''
@@ -563,7 +563,7 @@ class Actions(object):
         listitem.setInfo('video', metadata)
         listitem.setContentLookup(False)
 
-    def listitem_music(self, obj, listitem, item):
+    def listitem_music(self, obj, listitem, item, *args, **kwargs):
         API = api.API(item, self.server)
 
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
@@ -618,7 +618,7 @@ class Actions(object):
         listitem.setInfo('music', metadata)
         listitem.setContentLookup(False)
 
-    def listitem_photo(self, obj, listitem, item):
+    def listitem_photo(self, obj, listitem, item, *args, **kwargs):
         API = api.API(item, self.server)
 
         obj['Overview'] = API.get_overview(obj['Overview'])
@@ -654,7 +654,7 @@ class Actions(object):
         listitem.setInfo('pictures', metadata)
         listitem.setContentLookup(False)
 
-    def set_artwork(self, artwork, listitem, media):
+    def set_artwork(self, artwork, listitem, media, *args, **kwargs):
 
         if media == 'Episode':
 
@@ -700,7 +700,7 @@ class Actions(object):
             else:
                 self._set_art(listitem, k_art, artwork.get(e_art, " "))
 
-    def _set_art(self, listitem, art, path):
+    def _set_art(self, listitem, art, path, *args, **kwargs):
         LOG.debug(" [ art/%s ] %s", art, path)
 
         if art in ('fanart_image', 'small_poster', 'tiny_poster',
@@ -712,7 +712,7 @@ class Actions(object):
         else:
             listitem.setArt({art: path})
 
-    def resume_dialog(self, seektime, item):
+    def resume_dialog(self, seektime, item, *args, **kwargs):
 
         ''' Skip resume of queued playlist items and start them from the beginning
         '''
@@ -744,18 +744,19 @@ class Actions(object):
 
 class PlaylistWorker(threading.Thread):
 
-    def __init__(self, server_id, items, *args):
+    def __init__(self, server_id, items, *args, **kwargs):
 
         self.server_id = server_id
         self.items = items
         self.args = args
+        self.kwargs = kwargs
         threading.Thread.__init__(self)
 
     def run(self):
-        Actions(self.server_id).play_playlist(self.items, *self.args)
+        Actions(self.server_id).play_playlist(self.items, *self.args, **self.kwargs)
 
 
-def on_update(data, server):
+def on_update(data, server, *args, **kwargs):
 
     ''' Only for manually marking as watched/unwatched
     '''
@@ -799,7 +800,7 @@ def on_update(data, server):
 
             window('emby.skip.%s' % item[0], clear=True)
 
-def on_play(data, server):
+def on_play(data, server, *args, **kwargs):
 
     ''' Setup progress for emby playback.
     '''
