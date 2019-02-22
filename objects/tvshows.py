@@ -371,15 +371,6 @@ class TVShows(KodiDb):
         self.artwork.update(obj['Artwork']['Primary'], obj['EpisodeId'], "episode", "thumb")
         self.item_ids.append(obj['Id'])
 
-        if not self.direct_path and obj['Resume']:
-
-            temp_obj = dict(obj)
-            temp_obj['Path'] = "plugin://plugin.video.emby.tvshows/"
-            temp_obj['PathId'] = self.get_path(*values(temp_obj, QU.get_path_obj))
-            temp_obj['FileId'] = self.add_file(*values(temp_obj, QU.add_file_obj))
-            self.update_file(*values(temp_obj, QU.update_file_obj))
-            self.add_playstate(*values(temp_obj, QU.add_bookmark_obj))
-
         return not update
 
     def episode_add(self, obj):
@@ -517,22 +508,6 @@ class TVShows(KodiDb):
                 obj['DateAdded'] = Local(obj['DateAdded']).split('.')[0].replace('T', " ")
 
             self.add_playstate(*values(obj, QU.add_bookmark_obj))
-
-            if not self.direct_path and not obj['Resume']:
-
-                temp_obj = dict(obj)
-                temp_obj['Filename'] = self.get_filename(*values(temp_obj, QU.get_file_obj))
-                temp_obj['Path'] = "plugin://plugin.video.emby.tvshows/"
-                self.remove_file(*values(temp_obj, QU.delete_file_obj))
-
-            elif not self.direct_path and obj['Resume']:
-
-                temp_obj = dict(obj)
-                temp_obj['Filename'] = self.get_filename(*values(temp_obj, QU.get_file_obj))
-                temp_obj['PathId'] = self.get_path("plugin://plugin.video.emby.tvshows/")
-                temp_obj['FileId'] = self.add_file(*values(temp_obj, QU.add_file_obj))
-                self.update_file(*values(temp_obj, QU.update_file_obj))
-                self.add_playstate(*values(temp_obj, QU.add_bookmark_obj))
 
         self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
         LOG.info("USERDATA %s [%s/%s] %s: %s", obj['Media'], obj['FileId'], obj['KodiId'], obj['Id'], obj['Title'])
