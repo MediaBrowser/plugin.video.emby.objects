@@ -137,7 +137,15 @@ class TVShows(KodiDb):
 
         season_episodes = {}
 
-        for season in self.server['api'].get_seasons(obj['Id'])['Items']:
+        try:
+            all_seasons = self.server['api'].get_seasons(obj['Id'])['Items']
+        except Exception as error:
+            LOG.error("Unable to pull seasons for %s", obj['Title'])
+            LOG.error(error)
+
+            return
+
+        for season in all_seasons:
 
             if season['SeriesId'] != obj['Id']:
                 obj['SeriesId'] = season['SeriesId']
