@@ -535,7 +535,7 @@ class Actions(object):
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount']) or 0
         obj['Overlay'] = 7 if obj['Played'] else 6
         obj['Artwork']['Primary'] = obj['Artwork']['Primary'] or "special://home/addons/plugin.video.emby/icon.png"
-        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.emby/fanart.jpg"
+        obj['Artwork']['Thumb'] = obj['Artwork']['Thumb'] or "special://home/addons/plugin.video.emby/icon.jpg"
         obj['Artwork']['Backdrop'] = obj['Artwork']['Backdrop'] or ["special://home/addons/plugin.video.emby/fanart.jpg"]
 
 
@@ -545,15 +545,9 @@ class Actions(object):
             'playcount': obj['PlayCount'],
             'overlay': obj['Overlay']
         }
-        listitem.setIconImage(obj['Artwork']['Thumb'])
+        listitem.setIconImage('DefaultVideo.png')
         listitem.setThumbnailImage(obj['Artwork']['Primary'])
         self.set_artwork(obj['Artwork'], listitem, obj['Type'])
-
-        if obj['Artwork']['Primary']:
-            listitem.setThumbnailImage(obj['Artwork']['Primary'])
-
-        if not obj['Artwork']['Backdrop']:
-            listitem.setArt({'fanart': obj['Artwork']['Primary']})
 
         listitem.setProperty('totaltime', str(obj['Runtime']))
         listitem.setProperty('IsPlayable', 'true')
@@ -680,6 +674,13 @@ class Actions(object):
                 'fanart': "Backdrop",
                 'fanart_image': "Backdrop", # in case
                 'thumb': "Primary"
+            }
+        elif media in ('TvChannel'):
+
+            art = {
+                'fanart_image': "Backdrop",
+                'thumb': "Primary",
+                'fanart': "Backdrop"
             }
         else:
             art = {
