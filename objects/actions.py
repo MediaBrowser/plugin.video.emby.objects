@@ -299,6 +299,12 @@ class Actions(object):
             obj['Artwork'] = API.get_all_artwork(objects.map(item, 'Artwork'))
             self.listitem_photo(obj, listitem, item)
 
+        elif item['Type'] in ('Playlist'):
+
+            obj = objects.map(item, 'BrowseFolder')
+            obj['Artwork'] = API.get_all_artwork(objects.map(item, 'Artwork'))
+            self.listitem_folder(obj, listitem, item)
+
         elif item['Type'] in ('TvChannel'):
 
             obj = objects.map(item, 'BrowseChannel')
@@ -646,6 +652,23 @@ class Actions(object):
         listitem.setProperty('IsPlayable', 'false')
         listitem.setLabel(obj['Title'])
         listitem.setInfo('pictures', metadata)
+        listitem.setContentLookup(False)
+
+    def listitem_folder(self, obj, listitem, item, *args, **kwargs):
+        API = api.API(item, self.server)
+
+        obj['Overview'] = API.get_overview(obj['Overview'])
+
+        metadata = {
+            'title': obj['Title']
+        }
+        listitem.setProperty('path', obj['Artwork']['Primary'])
+        listitem.setThumbnailImage(obj['Artwork']['Primary'])
+        listitem.setProperty('IsFolder', 'true')
+        listitem.setIconImage('DefaultFolder.png')
+
+        listitem.setProperty('IsPlayable', 'false')
+        listitem.setLabel(obj['Title'])
         listitem.setContentLookup(False)
 
     def set_artwork(self, artwork, listitem, media, *args, **kwargs):
