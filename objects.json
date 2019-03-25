@@ -1,0 +1,7 @@
+{
+	"17.*": "171076032-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/krypton.zip",
+	"beta-17.*": "171076038-4.0.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/beta-krypton.zip",
+	"18.*": "181167211-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/leia.zip",
+	"beta-18.*": "181167224-4.0.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/beta-leia.zip",
+	"DEV": "DEV-0.1-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/develop.zip"
+}
