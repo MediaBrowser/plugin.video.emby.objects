@@ -20,7 +20,9 @@ LOG = logging.getLogger("EMBY."+__name__)
 class Kodi(object):
 
 
-    def __init__(self):
+    def __init__(self, cursor):
+
+        self.cursor = cursor
         self.artwork = artwork.Artwork(self.cursor)
 
     def create_entry_path(self):
