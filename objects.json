@@ -1,19 +1,34 @@
 {
-    "17.*": [
-        "171076032-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/krypton.zip"
-    ],
-    "beta-17.*": [
-        "171076039-4.0.15-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/beta-krypton.zip",
-        "171076038-4.0.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076038.zip"
-    ],
-    "18.*": [
-        "181167211-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/leia.zip"
-    ],
-    "beta-18.*": [
-        "181167225-4.0.15-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/beta-leia.zip",
-        "181167224-4.0.14-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167224.zip"
-    ],
-    "DEV": [
-        "DEV-0.1-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/develop.zip"
-    ]
+    "17.*": {
+        "desc": "Krypton objects",
+        "objects": [
+            "171076032-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/krypton.zip"
+        ]
+    },
+    "beta-17.*": {
+        "desc": "Krypton objects (beta)",
+        "objects": [
+            "171076039-4.0.15-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/beta-krypton.zip",
+            "171076038-4.0.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076038.zip"
+        ]
+    },
+    "18.*": {
+        "desc": "Leia objects",
+        "objects": [
+            "181167211-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/leia.zip"
+        ]
+    },
+    "beta-18.*": {
+        "desc": "Leia objects (beta)",
+        "objects": [
+            "181167225-4.0.15-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/beta-leia.zip",
+            "181167224-4.0.14-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167224.zip"
+        ]
+    },
+    "DEV": {
+        "desc": "Developer objects (unstable)",
+        "objects": [
+            "DEV-0.1-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/develop.zip"
+        ]
+    }
 }
