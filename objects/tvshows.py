@@ -35,6 +35,7 @@ class TVShows(KodiDb):
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
         self.item_ids = []
+        self.display_specials = settings('SeasonSpecials.bool')
 
         KodiDb.__init__(self, videodb.cursor)
 
@@ -338,10 +339,14 @@ class TVShows(KodiDb):
             else:
                 obj['Season'] = 0
 
-        if obj['AirsAfterSeason']:
+        if self.display_specials and not obj['Season']: # Only add for special episodes
+            if obj['AirsAfterSeason']:
 
-            obj['AirsBeforeSeason'] = obj['AirsAfterSeason']
-            obj['AirsBeforeEpisode'] = 4096 # Kodi default number for afterseason ordering
+                obj['AirsBeforeSeason'] = obj['AirsAfterSeason']
+                obj['AirsBeforeEpisode'] = 4096 # Kodi default number for afterseason ordering
+        else:
+            obj['AirsBeforeSeason'] = None
+            obj['AirsBeforeEpisode'] = None
 
         if obj['MultiEpisode']:
             obj['Title'] = "| %02d | %s" % (obj['MultiEpisode'], obj['Title'])
