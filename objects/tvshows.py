@@ -79,16 +79,16 @@ class TVShows(KodiDb):
 
             return False
 
-        elif pooling is None:
-            obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
-
-            if obj['Item']['Id'] != obj['Id']:
-                return self.tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
-
         try:
             obj['ShowId'] = e_item[0]
             obj['PathId'] = e_item[2]
         except TypeError as error:
+
+            if pooling is None:
+                obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
+
+                if str(obj['Item']['Id']) != obj['Id']:
+                    return self.tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
 
             update = False
             LOG.debug("ShowId %s not found", obj['Id'])
