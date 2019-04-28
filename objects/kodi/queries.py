@@ -288,7 +288,7 @@ add_movie =     		"""	INSERT INTO	movie(idMovie, idFile, c00, c01, c02, c03, c04
 add_movie_obj =             [   "{MovieId}","{FileId}","{Title}","{Plot}","{ShortPlot}","{Tagline}",
                                 "{Votes}","{RatingId}","{Writers}","{Year}","{Unique}","{SortTitle}",
                                 "{Runtime}","{Mpaa}","{Genre}","{Directors}","{Title}","{Studio}",
-                                "{Trailer}","{Country}","{CriticRating}","{Year}"
+                                "{Trailer}","{Country}","{CriticRating}","{Premiered}"
                             ]
 add_rating =    		"""	INSERT INTO rating(rating_id, media_id, media_type, rating_type, rating, votes) 
     						VALUES 		(?, ?, ?, ?, ?, ?) 
@@ -401,7 +401,7 @@ update_movie =  		"""	UPDATE 	movie
 update_movie_obj =          [   "{Title}","{Plot}","{ShortPlot}","{Tagline}","{Votes}","{RatingId}",
                                 "{Writers}","{Year}","{Unique}","{SortTitle}","{Runtime}",
                                 "{Mpaa}","{Genre}","{Directors}","{Title}","{Studio}","{Trailer}",
-                                "{Country}","{CriticRating}","{Year}","{MovieId}"
+                                "{Country}","{CriticRating}","{Premiered}","{MovieId}"
                             ]
 update_rating =     	"""	UPDATE 	rating 
     						SET 	media_id = ?, media_type = ?, rating_type = ?, rating = ?, votes = ? 
@@ -474,6 +474,22 @@ update_episode_obj =        [   "{Title}","{Plot}","{RatingId}","{Writers}","{Pr
                                 "{Season}","{Index}","{Title}","{AirsBeforeSeason}","{AirsBeforeEpisode}","{SeasonId}",
                                 "{ShowId}","{EpisodeId}"
                             ]
+update_settings = 		""" INSERT OR REPLACE INTO settings(idFile, Deinterlace, ViewMode, ZoomAmount, PixelRatio,
+															VerticalShift, AudioStream, SubtitleStream, SubtitleDelay,
+															SubtitlesOn, Brightness, Contrast, Gamma, 
+															VolumeAmplification, AudioDelay, ResumeTime, Sharpness,
+															NoiseReduction, NonLinStretch, PostProcess, ScalingMethod,
+															StereoMode, StereoInvert, VideoStream, TonemapMethod,
+															TonemapParam, Orientation, CenterMixLevel)
+							VALUES 							(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+															 ?, ?, ?, ?, ?, ?, ?, ?)
+						"""
+update_settings_obj = 		[ 	"{FileId}","{Deinterlace}","{ViewMode}","{ZoomAmount}","{PixelRatio}","{VerticalShift}",
+								"{AudioStream}","{SubtitleStream}","{SubtitleDelay}","{SubtitlesOn}","{Brightness}",
+								"{Contrast}","{Gamma}","{VolumeAmplification}","{AudioDelay}",0,"{Sharpness}",
+								"{NoiseReduction}","{NonLinStretch}","{PostProcess}","{ScalingMethod}","{StereoMode}",
+								0,-1,1,1.0,0,"{CenterMixLevel}"
+							]
 
 
 

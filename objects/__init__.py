@@ -1,5 +1,5 @@
-version = "181167224"
-embyversion = "4.0.13"
+version = "DEV"
+embyversion = "3.1.27"
 
 from movies import Movies
 from musicvideos import MusicVideos
