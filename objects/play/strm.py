@@ -33,7 +33,7 @@ class PlayStrm(Play):
             'Item': None,
             'Id': params.get('Id'),
             'DbId': params.get('KodiId'),
-            'Transcode': params.get('transcode') == 'true',
+            'Transcode': params.get('transcode'),
             'AdditionalParts': None,
             'ServerId': server_id,
             'KodiPlaylist': xbmc.PlayList(xbmc.PLAYLIST_VIDEO),
