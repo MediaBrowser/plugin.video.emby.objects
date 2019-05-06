@@ -4,6 +4,8 @@
 
 import logging
 
+import xbmc
+
 from helper import JSONRPC
 
 #################################################################################################
@@ -35,3 +37,18 @@ def get_grouped_set():
         return result['result']['value']
     except Exception as error:
         return False
+
+def get_web_server():
+
+    result = JSONRPC('Settings.GetSettingValue').execute({'setting': "services.webserver"})
+
+    try:
+        return result['result']['value']
+    except (KeyError, TypeError):
+        return False
+
+def enable_busy_dialog():
+    xbmc.executebuiltin('ActivateWindow(busydialognocancel)')
+
+def disable_busy_dialog():
+    xbmc.executebuiltin('Dialog.Close(busydialognocancel)')

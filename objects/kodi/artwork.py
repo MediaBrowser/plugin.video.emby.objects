@@ -12,10 +12,10 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 
-import queries as QU
-import queries_music as QUMU
-import queries_texture as QUTEX
 import requests
+from objects.kodi import queries as QU
+from objects.kodi import queries_music as QUMU
+from objects.kodi import queries_texture as QUTEX
 from helper import _, window, settings, dialog
 from database import Database
 

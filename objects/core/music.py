@@ -7,8 +7,8 @@ import datetime
 import logging
 import urllib
 
-from obj import Objects
-from kodi import Music as KodiDb, queries_music as QU
+from objects.core import Objects
+from objects.kodi import Music as KodiDb, queries_music as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, values, library_check, settings, Local
 
