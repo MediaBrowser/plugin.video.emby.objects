@@ -7,7 +7,7 @@ import logging
 import xbmc
 import xbmcgui
 
-from objects.core.obj import Objects
+from objects.core import Objects
 from helper import _, api
 
 #################################################################################################

@@ -162,3 +162,26 @@ class Monitor(monitor.Monitor):
                     server['api'].item_played(item[0], playcount)
 
                 window('emby.skip.%s' % item[0], clear=True)
+
+    def Playlist_OnAdd(self, server, data, *args, **kwargs):
+
+        ''' Detect widget playback. Widget for some reason, use audio playlists.
+        '''
+        if data['position'] == 0:
+
+            if self.playlistid == data['playlistid'] and data['item']['type'] != 'unknown':
+
+                LOG.info("[ reset autoplay ]")
+                window('emby.autoplay', clear=True)
+
+            if data['playlistid'] == 0:
+                window('emby.playlist.audio.bool', True)
+
+            self.playlistid = data['playlistid']
+
+        LOG.info(data)
+        if window('emby.playlist.start') and data['position'] == int(window('emby.playlist.start')) + 1:
+
+            LOG.info("--[ playlist ready ]")
+            window('emby.playlist.ready.bool', True)
+            window('emby.playlist.start', clear=True)
