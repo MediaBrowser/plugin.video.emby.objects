@@ -152,7 +152,10 @@ class PlayStrm(Play):
             raise Exception("SelectionCancel")
 
         play.set_external_subs(source, listitem)
-        play.set_subtitles_in_database(source, self.info['Item']['PlaybackInfo']['Subtitles'])
+
+        if self.info['Item']['PlaybackInfo']['Method'] != 'Transcode':
+            play.set_subtitles_in_database(source, self.info['Item']['PlaybackInfo']['Subtitles'])
+
         self.set_listitem(self.info['Item'], listitem, self.info['DbId'], False, seektime)
         listitem.setPath(self.info['Item']['PlaybackInfo']['Path'])
         playutils.set_properties(self.info['Item'], self.info['Item']['PlaybackInfo']['Method'], self.info['ServerId'])
@@ -207,7 +210,10 @@ class PlayStrm(Play):
             play = playutils.PlayUtilsStrm(part, False, self.info['ServerId'], self.info['Server'])
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
-            play.set_subtitles_in_database(source, part['PlaybackInfo']['Subtitles'])
+
+            if part['PlaybackInfo']['Method'] != 'Transcode':
+                play.set_subtitles_in_database(source, part['PlaybackInfo']['Subtitles'])
+
             self.set_listitem(part, listitem)
             listitem.setPath(part['PlaybackInfo']['Path'])
             playutils.set_properties(part, part['PlaybackInfo']['Method'], self.info['ServerId'])
