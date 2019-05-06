@@ -8,9 +8,9 @@ import sqlite3
 import urllib
 from ntpath import dirname
 
-from obj import Objects
-from kodi import TVShows as KodiDb, queries as QU
 import downloader as server
+from objects.core import Objects
+from objects.kodi import TVShows as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, library_check, settings, values, Local
 

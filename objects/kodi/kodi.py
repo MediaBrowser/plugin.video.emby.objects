@@ -6,8 +6,7 @@ import logging
 
 import xbmc
 
-import artwork
-import queries as QU
+from objects.kodi import artwork, queries as QU
 from helper import values
 
 ##################################################################################################
@@ -23,7 +22,7 @@ class Kodi(object):
     def __init__(self, cursor):
 
         self.cursor = cursor
-        self.artwork = artwork.Artwork(self.cursor)
+        self.artwork = artwork.Artwork(cursor)
 
     def create_entry_path(self):
         self.cursor.execute(QU.create_path)
