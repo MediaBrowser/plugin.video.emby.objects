@@ -4,8 +4,7 @@
 
 import logging
 
-from kodi import Kodi
-import queries as QU
+from objects.kodi import Kodi, queries as QU
 
 ##################################################################################################
 

@@ -7,8 +7,8 @@ import logging
 import re
 import urllib
 
-from obj import Objects
-from kodi import MusicVideos as KodiDb, queries as QU
+from objects.core import Objects
+from objects.kodi import MusicVideos as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, library_check, emby_item, values, Local
 
@@ -20,6 +20,7 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 
 class MusicVideos(KodiDb):
+
 
     def __init__(self, server, embydb, videodb, direct_path, *args, **kwargs):
 

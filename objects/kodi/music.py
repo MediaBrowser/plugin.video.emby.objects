@@ -4,8 +4,7 @@
 
 import logging
 
-import queries_music as QU
-from kodi import Kodi
+from objects.kodi import Kodi, queries_music as QU
 
 ##################################################################################################
 

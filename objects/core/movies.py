@@ -7,8 +7,8 @@ import logging
 import urllib
 
 import downloader as server
-from obj import Objects
-from kodi import Movies as KodiDb, queries as QU
+from objects.core import Objects
+from objects.kodi import Movies as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, library_check, values, settings, Local
 
