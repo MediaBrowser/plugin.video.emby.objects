@@ -89,7 +89,8 @@ class PlayStrm(Play):
 
         ''' Create and add listitems to the Kodi playlist.
         '''
-        self.info['StartIndex'] = start_position if start_position is not None else max(self.info['KodiPlaylist'].getposition(), 0)
+        pl_size = self.info['KodiPlaylist'].size()
+        self.info['StartIndex'] = self.info['KodiPlaylist'].size()
         self.info['Index'] = self.info['StartIndex']
         LOG.info("[ play/%s/%s ]", self.info['Id'], self.info['Index'])
         window('emby.playlist.start', str(self.info['Index']))
@@ -97,8 +98,8 @@ class PlayStrm(Play):
         listitem = xbmcgui.ListItem()
         self._set_playlist(listitem)
 
-        if not delayed:
-            self.start_playback(self.info['StartIndex'])
+        if not pl_size: # Trigger to start playback when finished setup in webservice.py.
+            window('emby.playlist.audio.bool', True)
 
         return self.info['StartIndex']
 
