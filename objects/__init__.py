@@ -1,5 +1,5 @@
-version = "171076040"
-embyversion = "4.0.15"
+version = "171076041"
+embyversion = "4.0.17"
 
 from core import Objects
 from core import ListItem
