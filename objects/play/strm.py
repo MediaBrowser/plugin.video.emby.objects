@@ -154,7 +154,7 @@ class PlayStrm(Play):
         play.set_external_subs(source, listitem)
 
         if self.info['Item']['PlaybackInfo']['Method'] != 'Transcode':
-            play.set_subtitles_in_database(source, self.info['Item']['PlaybackInfo']['Subtitles'])
+            play.set_subtitles_in_database(source, self.info['Item']['PlaybackInfo'].get('Subtitles', {}))
 
         self.set_listitem(self.info['Item'], listitem, self.info['DbId'], False, seektime)
         listitem.setPath(self.info['Item']['PlaybackInfo']['Path'])
@@ -212,7 +212,7 @@ class PlayStrm(Play):
             play.set_external_subs(source, listitem)
 
             if part['PlaybackInfo']['Method'] != 'Transcode':
-                play.set_subtitles_in_database(source, part['PlaybackInfo']['Subtitles'])
+                play.set_subtitles_in_database(source, part['PlaybackInfo'].get('Subtitles', {}))
 
             self.set_listitem(part, listitem)
             listitem.setPath(part['PlaybackInfo']['Path'])
