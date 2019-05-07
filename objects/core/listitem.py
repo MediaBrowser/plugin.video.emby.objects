@@ -100,7 +100,7 @@ class BaseListItem(object):
 class Playlist(BaseListItem):
 
     def __init__(self, *args, **kwargs):
-        BaseListItem.__init__(self, 'BrowseFolder', 'Artwork', *args, **kwargs)
+        BaseListItem.__init__(self, 'BrowseFolder', 'Artwork', False, *args, **kwargs)
 
     def set(self):
 
@@ -117,7 +117,7 @@ class Playlist(BaseListItem):
 class Channel(BaseListItem):
 
     def __init__(self, *args, **kwargs):
-        BaseListItem.__init__(self, 'BrowseChannel', 'Artwork', *args, **kwargs)
+        BaseListItem.__init__(self, 'BrowseChannel', 'Artwork', False, *args, **kwargs)
 
     @staticmethod
     def art():
@@ -164,7 +164,7 @@ class Channel(BaseListItem):
 class Photo(BaseListItem):
 
     def __init__(self, *args, **kwargs):
-        BaseListItem.__init__(self, 'BrowsePhoto', 'Artwork', *args, **kwargs)
+        BaseListItem.__init__(self, 'BrowsePhoto', 'Artwork', False, *args, **kwargs)
 
     def format(self):
 
