@@ -1,6 +1,8 @@
 version = "DEV"
 embyversion = "0.1"
 
+import utils
+
 from core import Objects
 from core import ListItem
 from core import Movies
@@ -15,7 +17,6 @@ from play import Playlist
 
 from listener import listener
 
-import utils
 import monitor
 import player
 
