@@ -340,12 +340,14 @@ class Video(BaseListItem):
             'dateadded': self['DateAdded'],
             'aired': self['Year'],
             'date': self['FileDate'],
-            'dbid': self.item['LI']['DbId'],
             'mediatype': "video",
             'lastplayed': self['DatePlayed'],
             'year': self['Year'],
             'duration': self['Runtime']
         }
+        if self.item['LI']['DbId']:
+            metadata['dbid'] = self.item['LI']['DbId']
+
         self.li.setCast(self.api.get_actors())
         self.set_playable()
         self.li.setLabel(self['Title'])
@@ -511,7 +513,6 @@ class Episode(Video):
             'dateadded': self['DateAdded'],
             'aired': self['Year'],
             'date': self['Premiere'] or self['FileDate'],
-            'dbid': self.item['LI']['DbId'],
             'mediatype': "episode",
             'tvshowtitle': self['SeriesName'],
             'season': self['Season'] or 0,
@@ -522,6 +523,9 @@ class Episode(Video):
             'duration': self['Runtime'],
             'aired': self['Premiere']
         }
+        if self.item['LI']['DbId']:
+            metadata['dbid'] = self.item['LI']['DbId']
+
         self.li.setCast(self.api.get_actors())
         self.set_playable()
         self.li.setLabel(self['Title'])
@@ -572,12 +576,14 @@ class Season(Video):
             'dateadded': self['DateAdded'],
             'aired': self['Year'],
             'date': self['Premiere'] or self['FileDate'],
-            'dbid': self.item['LI']['DbId'],
             'mediatype': "season",
             'tvshowtitle': self['SeriesName'],
             'season': self['Index'] or 0,
             'sortseason': self['Index'] or 0
         }
+        if self.item['LI']['DbId']:
+            metadata['dbid'] = self.item['LI']['DbId']
+
         self.li.setCast(self.api.get_actors())
         self.li.setProperty('NumEpisodes', str(self['RecursiveCount']))
         self.li.setProperty('WatchedEpisodes', str(self['RecursiveCount'] - self['Unwatched']))
@@ -626,13 +632,14 @@ class Series(Video):
             'dateadded': self['DateAdded'],
             'aired': self['Year'],
             'date': self['Premiere'] or self['FileDate'],
-            'dbid': self.item['LI']['DbId'],
             'mediatype': "tvshow",
             'tvshowtitle': self['Title'],
             'status': self['Status']
         }
-        self.li.setCast(self.api.get_actors())
+        if self.item['LI']['DbId']:
+            metadata['dbid'] = self.item['LI']['DbId']
 
+        self.li.setCast(self.api.get_actors())
         self.li.setProperty('TotalSeasons', str(self['ChildCount']))
         self.li.setProperty('TotalEpisodes', str(self['RecursiveCount']))
         self.li.setProperty('WatchedEpisodes', str(self['RecursiveCount'] - self['Unwatched']))
@@ -675,13 +682,15 @@ class Movie(Video):
             'dateadded': self['DateAdded'],
             'aired': self['Year'],
             'date': self['Premiere'] or self['FileDate'],
-            'dbid': self.item['LI']['DbId'],
             'mediatype': "movie",
             'imdbnumber': self['UniqueId'],
             'lastplayed': self['DatePlayed'],
             'duration': self['Runtime'],
             'userrating': self['CriticRating']
         }
+        if self.item['LI']['DbId']:
+            metadata['dbid'] = self.item['LI']['DbId']
+
         self.li.setCast(self.api.get_actors())
         self.set_playable()
         self.li.setLabel(self['Title'])
@@ -721,9 +730,11 @@ class BoxSet(Video):
             'dateadded': self['DateAdded'],
             'aired': self['Year'],
             'date': self['Premiere'] or self['FileDate'],
-            'dbid': self.item['LI']['DbId'],
             'mediatype': "set"
         }
+        if self.item['LI']['DbId']:
+            metadata['dbid'] = self.item['LI']['DbId']
+
         self.li.setCast(self.api.get_actors())
         self.li.setProperty('IsFolder', 'true')
         self.li.setLabel(self['Title'])
@@ -763,13 +774,15 @@ class MusicVideo(Video):
             'dateadded': self['DateAdded'],
             'aired': self['Year'],
             'date': self['Premiere'] or self['FileDate'],
-            'dbid': self.item['LI']['DbId'],
             'mediatype': "musicvideo",
             'album': self['Album'],
             'artist': self['Artists'] or [],
             'lastplayed': self['DatePlayed'],
             'duration': self['Runtime']
         }
+        if self.item['LI']['DbId']:
+            metadata['dbid'] = self.item['LI']['DbId']
+
         self.li.setCast(self.api.get_actors())
         self.set_playable()
         self.li.setLabel(self['Title'])

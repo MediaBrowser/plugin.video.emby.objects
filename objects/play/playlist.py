@@ -56,33 +56,18 @@ class Playlist(object):
 
     def play_now(self, params, *args, **kwargs):
 
-        ''' Add a dummy to the playlist and then remove it later.
-            
-            For some reason, if we clear the playlist and play at the same index,
-            Kodi will use an old listitem from before we cleared instead of the new one.
-            
-            The only workaround was to use xbmc.Player().stop() <-- ugly or
-            use a dummy entry to fill a different position and start playback at that position.
-        '''
         play = PlayStrm(params, self.server_id)
         self.info['StartIndex'] = 0
         self.info['Index'] = self.info['StartIndex']
 
         if play.info['Item']['MediaType'] == 'Video' or play.info['Item']['Type'] == 'AudioBook':
-            xbmc.PlayList(xbmc.PLAYLIST_VIDEO).clear()
+            play.info['KodiPlaylist'].clear()
         else:
-            xbmc.PlayList(xbmc.PLAYLIST_MUSIC).clear()
             play.info['KodiPlaylist'] = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
+            play.info['KodiPlaylist'].clear()
 
-        xbmc.sleep(200) # Allow playlist clear to catchup
-        play.info['KodiPlaylist'].add(url=None, listitem=xbmcgui.ListItem(), index=self.info['Index'])
-        self.info['Index'] += 1
-
-        self.info['Index'] = play.play(self.info['Index'])
-        play.start_playback(self.info['Index'])
-
-        xbmc.sleep(1000)
-        play.remove_from_playlist(self.info['StartIndex'])
+        self.info['Index'] = play.play()
+        play.start_playback()
 
     def play_next(self, params, *args, **kwargs):
 
