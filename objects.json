@@ -8,6 +8,7 @@
     "beta-17.*": {
         "desc": "Krypton objects (beta)",
         "objects": [
+            "171076045-4.0.21-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076045.zip",
             "171076044-4.0.17-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076044.zip",
             "171076040-4.0.15-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076040.zip",
             "171076038-4.0.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076038.zip"
@@ -22,6 +23,7 @@
     "beta-18.*": {
         "desc": "Leia objects (beta)",
         "objects": [
+            "181167231-4.0.21-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167231.zip",
             "181167230-4.0.17-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167230.zip",
             "181167225-4.0.15-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167225.zip",
             "181167224-4.0.14-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167224.zip"
