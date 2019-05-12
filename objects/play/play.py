@@ -9,7 +9,7 @@ import xbmcaddon
 
 from objects.core import ListItem
 from dialogs import resume
-from helper import _, window, api
+from helper import _, window, api, JSONRPC
 
 #################################################################################################
 
@@ -22,6 +22,14 @@ class Play(object):
 
     def __init__(self, server_id, server, *args, **kwargs):
         self.set_listitem = ListItem(server, server_id).set
+
+    def add_listitem(self, url, listitem, index):
+        self.info['KodiPlaylist'].add(url=url, listitem=listitem, index=self.info['Index'])
+
+    def remove_from_playlist(self, index):
+
+        LOG.debug("[ removing ] %s", index)
+        JSONRPC('Playlist.Remove').execute({'playlistid': self.info['KodiPlaylist'].getPlayListId(), 'position': index})
 
     def get_seektime(self):
 

@@ -47,11 +47,6 @@ class PlayPlugin(Play):
 
         LOG.info("--[ play plugin ]")
 
-    def remove_from_playlist(self, index):
-
-        LOG.debug("[ removing ] %s", index)
-        JSONRPC('Playlist.Remove').execute({'playlistid': self.info['KodiPlaylist'].getPlayListId(), 'position': index})
-
     def _get_intros(self):
         self.info['Intros'] = TheVoid('GetIntros', {'ServerId': self.info['ServerId'], 'Id': self.info['Id']}).get()
 
@@ -117,11 +112,15 @@ class PlayPlugin(Play):
             raise Exception("SelectionCancel")
 
         play.set_external_subs(source, listitem)
+
+        if self.info['Item']['PlaybackInfo']['Method'] != 'Transcode':
+            play.set_subtitles_in_database(source, self.info['Item']['PlaybackInfo'].get('Subtitles', {}))
+
         self.set_listitem(self.info['Item'], listitem, self.info['DbId'], False, seektime)
         listitem.setPath(self.info['Item']['PlaybackInfo']['Path'])
         playutils.set_properties(self.info['Item'], self.info['Item']['PlaybackInfo']['Method'], self.info['ServerId'])
 
-        self.info['KodiPlaylist'].add(url=self.info['Item']['PlaybackInfo']['Path'], listitem=listitem, index=self.info['Index'])
+        self.add_listitem(self.info['Item']['PlaybackInfo']['Path'], listitem, self.info['Index'])
         self.info['Index'] += 1
 
         if self.info['Item'].get('PartCount'):
@@ -154,7 +153,7 @@ class PlayPlugin(Play):
                     listitem.setPath(intro['PlaybackInfo']['Path'])
                     playutils.set_properties(intro, intro['PlaybackInfo']['Method'], self.info['ServerId'])
 
-                    self.info['KodiPlaylist'].add(url=intro['PlaybackInfo']['Path'], listitem=listitem, index=self.info['Index'])
+                    self.add_listitem(intro['PlaybackInfo']['Path'], listitem, self.info['Index'])
                     self.info['Index'] += 1
 
                     window('emby.skip.%s.bool' % intro['Id'], True)
@@ -171,9 +170,13 @@ class PlayPlugin(Play):
             play = playutils.PlayUtils(part, False, self.info['ServerId'], self.info['ServerAddress'])
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
+
+            if part['PlaybackInfo']['Method'] != 'Transcode':
+                play.set_subtitles_in_database(source, part['PlaybackInfo'].get('Subtitles', {}))
+
             self.set_listitem(part, listitem)
             listitem.setPath(part['PlaybackInfo']['Path'])
             playutils.set_properties(part, part['PlaybackInfo']['Method'], self.info['ServerId'])
 
-            self.info['KodiPlaylist'].add(url=part['PlaybackInfo']['Path'], listitem=listitem, index=self.info['Index'])
+            self.add_listitem(part['PlaybackInfo']['Path'], listitem, self.info['Index'])
             self.info['Index'] += 1

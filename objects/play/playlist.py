@@ -55,26 +55,17 @@ class Playlist(object):
 
     def play_now(self, params, *args, **kwargs):
 
-        ''' Add a dummy to the playlist and then remove it later.
-            
-            For some reason, if we clear the playlist and play at the same index,
-            Kodi will use an old listitem from before we cleared instead of the new one.
-            Use xbmc.Player().stop() as a workaround. Tried doing the same as for Krypton, no go.
-        '''
-        xbmc.Player().stop()
         play = PlayStrm(params, self.server_id)
         self.info['StartIndex'] = 0
         self.info['Index'] = self.info['StartIndex']
 
         if play.info['Item']['MediaType'] == 'Video' or play.info['Item']['Type'] == 'AudioBook':
-            xbmc.PlayList(xbmc.PLAYLIST_VIDEO).clear()
+            play.info['KodiPlaylist'].clear()
         else:
-            xbmc.PlayList(xbmc.PLAYLIST_MUSIC).clear()
             play.info['KodiPlaylist'] = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
+            play.info['KodiPlaylist'].clear()
 
-        xbmc.sleep(200) # Allow playlist clear to catchup
-
-        self.info['Index'] = play.play(self.info['Index'])
+        self.info['Index'] = play.play()
         play.start_playback()
 
     def play_next(self, params, *args, **kwargs):
