@@ -115,6 +115,10 @@ class Player(player.Player):
 
         self.stop_playback()
         item = self.set_item(current_file)
+
+        if not item:
+            return
+
         window('emby.skip.%s.bool' % item['Id'], True)
 
         if item['PlayOption'] == 'Addon': 

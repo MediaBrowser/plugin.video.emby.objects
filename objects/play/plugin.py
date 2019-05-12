@@ -77,7 +77,6 @@ class PlayPlugin(Play):
             Base PlayMedia scenario on playlist size.
         '''
         pl_size = int(bool(self.info['KodiPlaylist'].size()))
-        LOG.info(pl_size)
         self.info['StartIndex'] = max(self.info['KodiPlaylist'].getposition(), 0)
         self.info['Index'] = self.info['StartIndex'] + pl_size
         LOG.info("[ play/%s/%s ]", self.info['Id'], self.info['Index'])
@@ -104,7 +103,6 @@ class PlayPlugin(Play):
             xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
             
             if not pl_size:
-                LOG.info("hello world")
                 xbmc.Player().play(self.info['KodiPlaylist'], startpos=self.info['StartIndex'], windowed=False)
             else:
                 xbmc.sleep(2000)
