@@ -262,6 +262,9 @@ class Kodi(object):
     def set_playcount(self, *args):
         self.cursor.execute(QU.update_playcount, args)
 
+    def add_settings(self, *args):
+        self.cursor.execute(QU.update_settings, args)
+
     def add_tags(self, tags, *args):
         self.cursor.execute(QU.delete_tags, args)
 

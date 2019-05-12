@@ -128,6 +128,7 @@ class PlayPlugin(Play):
             raise Exception("SelectionCancel")
 
         play.set_external_subs(source, listitem)
+        play.set_subtitles_in_database(source, self.info['Item']['PlaybackInfo'].get('Subtitles'))
         self.set_listitem(self.info['Item'], listitem, self.info['DbId'], False, seektime)
         listitem.setPath(self.info['Item']['PlaybackInfo']['Path'])
         playutils.set_properties(self.info['Item'], self.info['Item']['PlaybackInfo']['Method'], self.info['ServerId'])
@@ -182,6 +183,7 @@ class PlayPlugin(Play):
             play = playutils.PlayUtils(part, False, self.info['ServerId'], self.info['ServerAddress'])
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
+            play.set_subtitles_in_database(source, part['PlaybackInfo'].get('Subtitles'))
             self.set_listitem(part, listitem)
             listitem.setPath(part['PlaybackInfo']['Path'])
             playutils.set_properties(part, part['PlaybackInfo']['Method'], self.info['ServerId'])

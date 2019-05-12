@@ -121,9 +121,6 @@ class Player(player.Player):
 
         window('emby.skip.%s.bool' % item['Id'], True)
 
-        if item['PlayOption'] == 'Addon': 
-            self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex']) 
-
     def next_up(self):
 
         item = self.get_file_info(self.get_playing_file())
