@@ -23,7 +23,7 @@
     "beta-18.*": {
         "desc": "Leia objects (beta)",
         "objects": [
-            "181167232-4.0.21-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167232.zip",
+            "181167233-4.0.21-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167233.zip",
             "181167230-4.0.17-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167230.zip",
             "181167225-4.0.15-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167225.zip",
             "181167224-4.0.14-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167224.zip"
