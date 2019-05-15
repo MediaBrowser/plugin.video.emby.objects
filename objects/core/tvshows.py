@@ -23,14 +23,13 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 class TVShows(KodiDb):
 
-    def __init__(self, server, embydb, videodb, direct_path, update_library=False, verify=False, *args, **kwargs):
+    def __init__(self, server, embydb, videodb, direct_path, update_library=False, *args, **kwargs):
 
         self.server = server
         self.emby = embydb
         self.video = videodb
         self.direct_path = direct_path
         self.update_library = update_library
-        self.verify = verify
 
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
@@ -232,10 +231,6 @@ class TVShows(KodiDb):
             if not validate(obj['Path']):
                 raise Exception("Failed to validate path. User stopped.")
         else:
-            """
-            obj['TopLevel'] = "plugin://plugin.video.emby.tvshows/"
-            obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
-            """
             obj['TopLevel'] = "http://127.0.0.1:57578/emby/kodi/tvshows/"
             obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
 
@@ -281,6 +276,7 @@ class TVShows(KodiDb):
         '''
         API = api.API(item, self.server['auth/server-address'])
         obj = self.objects.map(item, 'Episode')
+        obj['Item'] = item
         update = True
 
         if obj['Location'] == "Virtual":
@@ -293,10 +289,15 @@ class TVShows(KodiDb):
 
             return
 
-        elif self.verify and not self.server['api'].is_valid_episode(obj['SeriesId'], obj['Id']):
-            LOG.info("Skipping episode %s, should not be displayed", obj['Id'])
+        elif not self.update_library:
+            obj['Item']['Id'] = self.server['api'].is_valid_episode(obj['SeriesId'], obj['Title'], obj['Id'])
 
-            return
+            if str(obj['Item']['Id']) != obj['Id']:
+
+                self.remove(obj['Id'])
+                LOG.info("Skipping stacked episode %s [%s]", obj['Title'], obj['Id'])
+
+                return
 
         try:
             obj['EpisodeId'] = e_item[0]
@@ -392,7 +393,7 @@ class TVShows(KodiDb):
         obj['PathId'] = self.add_path(*values(obj, QU.add_path_obj))
         obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
 
-        try:
+        try: # TODO Remove as it's not needed, but make sure first.
             self.add_episode(*values(obj, QU.add_episode_obj))
         except sqlite3.IntegrityError as error:
 
@@ -436,16 +437,6 @@ class TVShows(KodiDb):
 
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
         else:
-            """
-            obj['Path'] = "plugin://plugin.video.emby.tvshows/%s/" % obj['SeriesId']
-            params = {
-                'filename': obj['Filename'].encode('utf-8'),
-                'id': obj['Id'],
-                'dbid': obj['EpisodeId'],
-                'mode': "play"
-            }
-            obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
-            """
             obj['Path'] = "http://127.0.0.1:57578/emby/kodi/tvshows/%s/" % obj['SeriesId']
             params = {
                 'Name': obj['Filename'].encode('utf-8'),
@@ -455,8 +446,8 @@ class TVShows(KodiDb):
             obj['Filename'] = "%s/file.strm?%s" % (obj['Id'], urllib.urlencode(params))
 
     def get_show_id(self, obj):
-        obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))
 
+        obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))
         if obj['ShowId'] is None:
 
             try:
