@@ -31,6 +31,12 @@
             "181167224-4.0.14-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167224.zip"
         ]
     },
+    "beta-19.*": {
+        "desc": "Leia objects (beta)",
+        "objects": [
+            "181167235-4.0.23-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167235.zip"
+        ]
+    },
     "DEV": {
         "desc": "Developer objects (unstable)",
         "objects": [
