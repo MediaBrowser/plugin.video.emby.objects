@@ -78,7 +78,16 @@ class PlayPlugin(Play):
         window('emby.playlist.start', str(self.info['Index']))
 
         listitem = xbmcgui.ListItem()
-        self._set_playlist(listitem)
+
+        try:
+            self._set_playlist(listitem)
+        except Exception as error:
+            if not xbmc.Player().isPlaying():
+
+                self.info['KodiPlaylist'].clear()
+                xbmc.Player().stop()
+
+            raise
 
         count = 20
 
