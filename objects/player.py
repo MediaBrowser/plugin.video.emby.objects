@@ -104,6 +104,12 @@ class Player(player.Player):
 
         item = self.get_file_info(self.get_playing_file())
         next_item = self.get_next_up(item)
+
+        if not next_item:
+            LOG.info("[ no next episode detected ]")
+
+            return
+
         objects = Objects()
 
         API = api.API(next_item, item['Server']['auth/server-address'])
