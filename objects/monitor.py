@@ -176,7 +176,7 @@ class Monitor(monitor.Monitor):
 
             if data['playlistid'] == 0:
                 window('emby.playlist.audio.bool', True)
-            else:
+            elif self.playlistid != 0: # If the audio was relaunched.
                 window('emby.playlist.audio', clear=True)
 
             self.playlistid = data['playlistid']
