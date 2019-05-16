@@ -1,23 +1,23 @@
 version = "181167236"
 embyversion = "4.0.23"
 
-import utils
+from objects import utils
 
-from core import Objects
-from core import ListItem
-from core import Movies
-from core import MusicVideos
-from core import TVShows
-from core import Music
+from objects.core import Objects
+from objects.core import ListItem
+from objects.core import Movies
+from objects.core import MusicVideos
+from objects.core import TVShows
+from objects.core import Music
 
-from play import PlayStrm
-from play import PlaySingle
-from play import PlayPlugin
-from play import Playlist
+from objects.play import PlayStrm
+from objects.play import PlaySingle
+from objects.play import PlayPlugin
+from objects.play import Playlist
 
-from listener import listener
+from objects.listener import listener
 
-import monitor
-import player
+from objects import monitor
+from objects import player
 
 Objects().mapping()
