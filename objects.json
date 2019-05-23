@@ -8,7 +8,7 @@
     "beta-17.*": {
         "desc": "Krypton objects (beta)",
         "objects": [
-            "171076050-4.0.25-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076050.zip",
+            "171076051-4.0.25-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076051.zip",
             "171076049-4.0.23-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076049.zip",
             "171076046-4.0.21-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076046.zip",
             "171076044-4.0.17-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076044.zip",
