@@ -120,6 +120,10 @@ class Player(player.Player):
             return
 
         window('emby.skip.%s.bool' % item['Id'], True)
+        xbmc.sleep(2000) # give some time to update player
+
+        if item['PlayOption'] == 'Addon' and not item['AutoSwitched']:
+            self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
 
     def next_up(self):
 
