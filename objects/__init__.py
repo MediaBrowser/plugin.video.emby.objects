@@ -1,5 +1,5 @@
-version = "171076049"
-embyversion = "4.0.23"
+version = "171076050"
+embyversion = "4.0.25"
 
 from objects import utils
 
