@@ -4,6 +4,8 @@
 
 import logging
 
+import xbmc
+
 from objects.core import Objects
 from hooks import player
 from helper import _, api, window, event, silent_catch, JSONRPC
