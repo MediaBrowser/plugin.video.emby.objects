@@ -8,6 +8,7 @@ import sys
 import xbmc
 import xbmcgui
 import xbmcvfs
+import xbmcplugin
 
 from objects.play import Play
 from downloader import TheVoid
@@ -81,6 +82,6 @@ class PlaySingle(Play):
             raise Exception("Playback selection cancelled")
 
         play.set_external_subs(source, listitem)
-        self.set_listitem(self.info['Item'], listitem, self.info['DbId'], seektime)
+        self.set_listitem(self.info['Item'], listitem, self.info['DbId'], seektime=seektime)
         listitem.setPath(self.info['Item']['PlaybackInfo']['Path'])
         playutils.set_properties(self.info['Item'], self.info['Item']['PlaybackInfo']['Method'], self.info['ServerId'])
