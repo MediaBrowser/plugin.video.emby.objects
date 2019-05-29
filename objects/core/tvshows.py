@@ -162,10 +162,9 @@ class TVShows(KodiDb):
             return
 
         for season in all_seasons:
-            if season['SeriesId'] != obj['Id']:
 
-                if self.update_library:
-                    season_episodes[season['Id']] = season['SeriesId']
+            if (self.update_library and season['SeriesId'] != obj['Id']) or (not update and not self.update_library):
+                season_episodes[season['Id']] = season.get('SeriesId', obj['Id'])
 
             try:
                 self.emby_db.get_item_by_id(season['Id'])[0]
@@ -403,7 +402,7 @@ class TVShows(KodiDb):
             return self.episode_add(obj)
 
         self.emby_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
-        LOG.info("ADD episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
+        LOG.info("ADD episode [%s/%s/%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def episode_update(self, obj):
         
@@ -419,7 +418,7 @@ class TVShows(KodiDb):
 
         self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
         self.emby_db.update_parent_id(*values(obj, QUEM.update_parent_episode_obj))
-        LOG.info("UPDATE episode [%s/%s] %s: %s", obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
+        LOG.info("UPDATE episode [%s/%s/%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def get_episode_path_filename(self, obj):
 
