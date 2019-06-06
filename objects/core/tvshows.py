@@ -54,7 +54,7 @@ class TVShows(KodiDb):
     @stop()
     @emby_item()
     @library_check()
-    def tvshow(self, item, e_item, library, pooling=None, *args, **kwargs):
+    def tvshow(self, item, e_item, library, pooling=None, redirect=False, *args, **kwargs):
 
         ''' If item does not exist, entry will be added.
             If item exists, entry will be updated.
@@ -151,11 +151,17 @@ class TVShows(KodiDb):
         self.artwork.add(obj['Artwork'], obj['ShowId'], "tvshow")
         self.item_ids.append(obj['Id'])
 
+        if redirect:
+            LOG.info("tvshow added as a redirect")
+
+            return
+
         season_episodes = {}
 
         try:
             all_seasons = self.server['api'].get_seasons(obj['Id'])['Items']
         except Exception as error:
+
             LOG.error("Unable to pull seasons for %s", obj['Title'])
             LOG.error(error)
 
@@ -185,10 +191,10 @@ class TVShows(KodiDb):
 
         ''' Add object to kodi.
         '''
-        obj['RatingId'] =  self.create_entry_rating()
+        obj['RatingId'] = self.create_entry_rating()
         self.add_ratings(*values(obj, QU.add_rating_tvshow_obj))
 
-        obj['Unique'] =  self.create_entry_unique_id()
+        obj['Unique'] = self.create_entry_unique_id()
         self.add_unique_id(*values(obj, QU.add_unique_id_tvshow_obj))
 
         obj['TopPathId'] = self.add_path(obj['TopLevel'])
@@ -204,10 +210,10 @@ class TVShows(KodiDb):
         
         ''' Update object to kodi.
         '''
-        obj['RatingId'] =  self.get_rating_id(*values(obj, QU.get_unique_id_tvshow_obj))
+        obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_unique_id_tvshow_obj))
         self.update_ratings(*values(obj, QU.update_rating_tvshow_obj))
 
-        obj['Unique'] =  self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
+        obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
         self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
 
         self.update(*values(obj, QU.update_tvshow_obj))
@@ -246,7 +252,6 @@ class TVShows(KodiDb):
         obj = self.objects.map(item, 'Season')
 
         obj['ShowId'] = show_id
-
         if obj['ShowId'] is None:
 
             if not self.get_show_id(obj):
@@ -255,7 +260,8 @@ class TVShows(KodiDb):
         obj['SeasonId'] = self.get_season(*values(obj, QU.get_season_obj))
         obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
 
-        if obj['Location'] != "Virtual":
+        if obj['Location'] != 'Virtual':
+
             self.emby_db.add_reference(*values(obj, QUEM.add_reference_season_obj))
             self.item_ids.append(obj['Id'])
 
@@ -278,7 +284,7 @@ class TVShows(KodiDb):
         obj['Item'] = item
         update = True
 
-        if obj['Location'] == "Virtual":
+        if obj['Location'] == 'Virtual':
             LOG.info("Skipping virtual episode %s: %s", obj['Title'], obj['Id'])
 
             return
@@ -402,7 +408,7 @@ class TVShows(KodiDb):
             return self.episode_add(obj)
 
         self.emby_db.add_reference(*values(obj, QUEM.add_reference_episode_obj))
-        LOG.info("ADD episode [%s/%s/%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
+        LOG.info("ADD episode [%s/%s/%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['EpisodeId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def episode_update(self, obj):
         
@@ -411,14 +417,14 @@ class TVShows(KodiDb):
         obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_episode_obj))
         self.update_ratings(*values(obj, QU.update_rating_episode_obj))
 
-        obj['Unique'] =  self.get_unique_id(*values(obj, QU.get_unique_id_episode_obj))
+        obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_episode_obj))
         self.update_unique_id(*values(obj, QU.update_unique_id_episode_obj))
 
         self.update_episode(*values(obj, QU.update_episode_obj))
 
         self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
         self.emby_db.update_parent_id(*values(obj, QUEM.update_parent_episode_obj))
-        LOG.info("UPDATE episode [%s/%s/%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['PathId'], obj['FileId'], obj['Id'], obj['Title'])
+        LOG.info("UPDATE episode [%s/%s/%s/%s] %s: %s", obj['ShowId'], obj['SeasonId'], obj['EpisodeId'], obj['FileId'], obj['Id'], obj['Title'])
 
     def get_episode_path_filename(self, obj):
 
@@ -446,11 +452,14 @@ class TVShows(KodiDb):
 
     def get_show_id(self, obj):
 
+        if obj.get('ShowId'):
+            return True
+
         obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))
         if obj['ShowId'] is None:
 
             try:
-                self.tvshow(self.server['api'].get_item(obj['SeriesId']), library=None)
+                self.tvshow(self.server['api'].get_item(obj['SeriesId']), library=None, redirect=True)
                 obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
             except (TypeError, KeyError):
                 LOG.error("Unable to add series %s", obj['SeriesId'])
