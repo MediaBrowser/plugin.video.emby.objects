@@ -265,6 +265,11 @@ class Kodi(object):
     def add_settings(self, *args):
         self.cursor.execute(QU.update_settings, args)
 
+    def get_settings(self, *args):
+        self.cursor.execute(QU.get_settings, args)
+
+        return self.cursor.fetchone()
+
     def add_tags(self, tags, *args):
         self.cursor.execute(QU.delete_tags, args)
 

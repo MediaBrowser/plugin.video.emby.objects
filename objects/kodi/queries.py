@@ -195,9 +195,19 @@ get_total_episodes =    """ SELECT  totalCount
 get_total_episodes_obj =    [   "{ParentId}"
                             ]
 get_artwork =           """ SELECT  url 
-                            FROM art 
-                            WHERE media_type != 'actor'
+                            FROM 	art 
+                            WHERE 	media_type != 'actor'
                         """
+get_settings = 			""" SELECT 	idFile, Deinterlace, ViewMode, ZoomAmount, PixelRatio,
+									VerticalShift, AudioStream, SubtitleStream, SubtitleDelay,
+									SubtitlesOn, Brightness, Contrast, Gamma, 
+									VolumeAmplification, AudioDelay, ResumeTime, Sharpness,
+									NoiseReduction, NonLinStretch, PostProcess, ScalingMethod,
+									StereoMode, StereoInvert, VideoStream, TonemapMethod,
+									TonemapParam, Orientation, CenterMixLevel
+							FROM 	settings
+							Where 	idFile = ?
+						"""
 
 
 
