@@ -70,6 +70,7 @@ class PlayPlugin(Play):
 
         ''' Create and add listitems to the Kodi playlist.
         '''
+        self.info['KodiPlaylist'] = self.set_playlist()
         self.info['StartIndex'] = max(self.info['KodiPlaylist'].getposition(), 0)
         self.info['Index'] = self.info['StartIndex'] + 1
         relaunch = False

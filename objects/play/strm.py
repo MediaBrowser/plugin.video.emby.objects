@@ -84,6 +84,7 @@ class PlayStrm(Play):
 
         ''' Create and add listitems to the Kodi playlist.
         '''
+        self.info['KodiPlaylist'] = self.set_playlist()
         self.info['StartIndex'] = start_position if start_position is not None else max(self.info['KodiPlaylist'].getposition(), 0)
         self.info['Index'] = self.info['StartIndex']
         LOG.info("[ play/%s/%s ]", self.info['Id'], self.info['Index'])
@@ -105,6 +106,10 @@ class PlayStrm(Play):
 
         if self.info['DbId'] and self.info['MediaType']:
             self.add_to_playlist(self.info['MediaType'], self.info['DbId'], self.info['Index'])
+
+        elif self.info['Item']['MediaType'] == 'Audio':
+            listitem = xbmcgui.ListItem()
+            self._set_playlist(listitem)
         else:
             listitem = xbmcgui.ListItem()
             self.set_listitem(self.info['Item'], listitem, self.info['DbId'])
