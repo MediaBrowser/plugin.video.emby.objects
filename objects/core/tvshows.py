@@ -35,6 +35,7 @@ class TVShows(KodiDb):
         self.objects = Objects()
         self.item_ids = []
         self.display_specials = settings('SeasonSpecials.bool')
+        self.display_multiep = settings('displayMultiEpLabel.bool')
 
         KodiDb.__init__(self, videodb.cursor)
 
@@ -367,7 +368,7 @@ class TVShows(KodiDb):
             obj['AirsBeforeSeason'] = None
             obj['AirsBeforeEpisode'] = None
 
-        if obj['MultiEpisode']:
+        if obj['MultiEpisode'] and self.display_multiep:
             obj['Title'] = "| %02d | %s" % (obj['MultiEpisode'], obj['Title'])
 
         if not self.get_show_id(obj):
