@@ -35,6 +35,7 @@ class TVShows(KodiDb):
         self.objects = Objects()
         self.item_ids = []
         self.display_specials = settings('SeasonSpecials.bool')
+        self.display_multiep = settings('displayMultiEpLabel.bool')
 
         KodiDb.__init__(self, videodb.cursor)
 
@@ -113,7 +114,8 @@ class TVShows(KodiDb):
         if obj['Status'] != 'Ended':
             obj['Status'] = None
 
-        self.get_path_filename(obj)
+        if not self.get_path_filename(obj):
+            return
 
         if obj['Premiere']:
             obj['Premiere'] = str(Local(obj['Premiere'])).split('.')[0].replace('T', " ")
@@ -224,6 +226,11 @@ class TVShows(KodiDb):
 
         ''' Get the path and build it into protocol://path
         '''
+        if not obj['Path']:
+            LOG.info("Path is missing")
+
+            return False
+
         if self.direct_path:
 
             if '\\' in obj['Path']:
@@ -238,6 +245,8 @@ class TVShows(KodiDb):
         else:
             obj['TopLevel'] = "http://127.0.0.1:57578/emby/kodi/tvshows/"
             obj['Path'] = "%s%s/" % (obj['TopLevel'], obj['Id'])
+
+        return True
 
 
     @stop()
@@ -336,7 +345,8 @@ class TVShows(KodiDb):
         obj['Audio'] = API.audio_streams(obj['Audio'] or [])
         obj['Streams'] = API.media_streams(obj['Video'], obj['Audio'], obj['Subtitles'])
 
-        self.get_episode_path_filename(obj)
+        if not self.get_episode_path_filename(obj):
+            return
 
         if obj['Premiere']:
             obj['Premiere'] = Local(obj['Premiere']).split('.')[0].replace('T', " ")
@@ -358,7 +368,7 @@ class TVShows(KodiDb):
             obj['AirsBeforeSeason'] = None
             obj['AirsBeforeEpisode'] = None
 
-        if obj['MultiEpisode']:
+        if obj['MultiEpisode'] and self.display_multiep:
             obj['Title'] = "| %02d | %s" % (obj['MultiEpisode'], obj['Title'])
 
         if not self.get_show_id(obj):
@@ -430,6 +440,11 @@ class TVShows(KodiDb):
 
         ''' Get the path and build it into protocol://path
         '''
+        if not obj['Path']:
+            LOG.info("Path is missing")
+
+            return False
+
         if '\\' in obj['Path']:
             obj['Filename'] = obj['Path'].rsplit('\\', 1)[1]
         else:
@@ -449,6 +464,8 @@ class TVShows(KodiDb):
                 'Id': obj['Id']
             }
             obj['Filename'] = "%s/file.strm?%s" % (obj['Id'], urllib.urlencode(params))
+
+        return True
 
     def get_show_id(self, obj):
 

@@ -58,14 +58,9 @@ class Playlist(object):
         play = PlayStrm(params, self.server_id)
         self.info['StartIndex'] = 0
         self.info['Index'] = self.info['StartIndex']
-
-        if play.info['Item']['MediaType'] == 'Video' or play.info['Item']['Type'] == 'AudioBook':
-            play.info['KodiPlaylist'].clear()
-        else:
-            play.info['KodiPlaylist'] = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
-            play.info['KodiPlaylist'].clear()
-
+        play.info['KodiPlaylist'].clear()
         self.info['Index'] = play.play()
+        self.info['KodiPlaylist'] = play.info['KodiPlaylist']
         play.start_playback()
 
     def play_next(self, params, *args, **kwargs):
@@ -86,4 +81,5 @@ class Playlist(object):
         for item in self.items:
 
             play = PlayStrm({'Id': item}, self.server_id)
+            play.info['KodiPlaylist'] = self.info['KodiPlaylist']
             self.info['Index'] = play.play_folder(self.info['Index'])
