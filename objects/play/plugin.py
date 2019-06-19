@@ -66,11 +66,14 @@ class PlayPlugin(Play):
             self._get_item()
             self._get_additional_parts()
 
-    def play(self):
+    def play(self, clear_playlist=False):
 
         ''' Create and add listitems to the Kodi playlist.
         '''
         self.info['KodiPlaylist'] = self.set_playlist()
+        if clear_playlist:
+            self.info['KodiPlaylist'].clear()
+
         self.info['StartIndex'] = max(self.info['KodiPlaylist'].getposition(), 0)
         self.info['Index'] = self.info['StartIndex'] + 1
         relaunch = False
@@ -88,7 +91,7 @@ class PlayPlugin(Play):
         except Exception:
             pass
 
-        if relaunch:
+        if relaunch or max(self.info['KodiPlaylist'].getposition(), 0) == self.info['StartIndex']:
             xbmc.Player().play(self.info['KodiPlaylist'], startpos=self.info['StartIndex'], windowed=False)
         else:
             xbmc.sleep(1000)
