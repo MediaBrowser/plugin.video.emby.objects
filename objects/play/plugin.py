@@ -71,6 +71,7 @@ class PlayPlugin(Play):
         ''' Create and add listitems to the Kodi playlist. 
             Base PlayMedia scenario on playlist size.
         '''
+        self.info['KodiPlaylist'] = self.set_playlist()
         pl_size = int(bool(self.info['KodiPlaylist'].size()))
         self.info['StartIndex'] = max(self.info['KodiPlaylist'].getposition(), 0)
         self.info['Index'] = self.info['StartIndex'] + pl_size

@@ -5,6 +5,7 @@
 import logging
 from datetime import timedelta
 
+import xbmc
 import xbmcaddon
 
 from objects import ListItem
@@ -23,6 +24,14 @@ class Play(object):
 
     def __init__(self, server_id, server, *args, **kwargs):
         self.set_listitem = ListItem(server, server_id).set
+
+    def set_playlist(self):
+
+        if self.info['Item']['MediaType'] == 'Audio':
+            LOG.info("using music playlist")
+            return xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
+
+        return xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
 
     def add_listitem(self, url, listitem, index):
         self.info['KodiPlaylist'].add(url=url, listitem=listitem, index=self.info['Index'])
