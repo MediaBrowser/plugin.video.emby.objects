@@ -50,7 +50,7 @@ class Artwork(object):
             Delete current entry before updating with the new one.
             Cache fanart and poster in Kodi texture cache.
         '''
-        if not image_url or image == 'poster' and media in ('song', 'artist', 'album'):
+        if image == 'poster' and media in ('song', 'artist', 'album'):
             return
 
         cache = False
@@ -65,10 +65,12 @@ class Artwork(object):
             self.cursor.execute(QU.add_art, (kodi_id, media, image, image_url))
         else:
             if url != image_url:
-                cache = True
 
-                if image in ('fanart', 'poster'):
-                    self.delete_cache(url)
+                cache = True
+                self.delete_cache(url)
+
+                if not image_url:
+                    return
 
                 LOG.info("UPDATE to kodi_id %s art: %s", kodi_id, image_url)
                 self.cursor.execute(QU.update_art, (image_url, kodi_id, media, image))
@@ -109,7 +111,7 @@ class Artwork(object):
                 for kodi_image in KODI['Primary']:
                     self.update(*(artwork['Primary'],) + args + (kodi_image,))
 
-            elif artwork.get(art):
+            else:
                 self.update(*(artwork[art],) + args + (KODI[art],))
 
     def delete(self, *args):
@@ -119,8 +121,7 @@ class Artwork(object):
         self.cursor.execute(QU.get_art_url, args)
 
         for row in self.cursor.fetchall():
-            if row[1] in ('poster', 'fanart'):
-                self.delete_cache(row[0])
+            self.delete_cache(row[0])
 
     def cache(self, url, forced=False):
 
