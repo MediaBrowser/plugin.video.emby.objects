@@ -36,6 +36,9 @@ class PlaySingle(Play):
             'Transcode': params.get('transcode') == 'true',
             'ServerId': server_id,
             'ServerAddress': TheVoid('GetServerAddress', {'ServerId': server_id}).get(),
+            'AudioIndex': params.get('AudioIndex'),
+            'SubtitleIndex': params.get('SubtitleIndex'),
+            'MediaSourceId': params.get('MediaSourceId')
         }
         if self.info['Transcode'] is None:
              self.info['Transcode'] = settings('playFromTranscode.bool') if settings('playFromStream.bool') else None
@@ -76,7 +79,7 @@ class PlaySingle(Play):
 
         LOG.info("[ main/%s ] %s", self.info['Item']['Id'], self.info['Item']['Name'])
         play = playutils.PlayUtils(self.info['Item'], self.info['Transcode'], self.info['ServerId'], self.info['ServerAddress'])
-        source = play.select_source(play.get_sources())
+        source = play.select_source(play.get_sources(self.info['MediaSourceId']), self.info['AudioIndex'], self.info['SubtitleIndex'])
 
         if not source:
             raise Exception("Playback selection cancelled")

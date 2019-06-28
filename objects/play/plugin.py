@@ -31,13 +31,16 @@ class PlayPlugin(Play):
         self.info = {
             'Intros': None,
             'Item': None,
-            'Id': params.get('id'),
+            'Id': params.get('id', params.get('Id')),
             'DbId': params.get('dbid'),
             'Transcode': params.get('transcode') == 'true',
             'AdditionalParts': None,
             'ServerId': server_id,
             'KodiPlaylist': xbmc.PlayList(xbmc.PLAYLIST_VIDEO),
-            'ServerAddress': TheVoid('GetServerAddress', {'ServerId': server_id}).get()
+            'ServerAddress': TheVoid('GetServerAddress', {'ServerId': server_id}).get(),
+            'AudioIndex': params.get('AudioIndex'),
+            'SubtitleIndex': params.get('SubtitleIndex'),
+            'MediaSourceId': params.get('MediaSourceId')
         }
         if self.info['Transcode'] is None:
              self.info['Transcode'] = settings('playFromTranscode.bool') if settings('playFromStream.bool') else None
@@ -66,32 +69,28 @@ class PlayPlugin(Play):
             self._get_item()
             self._get_additional_parts()
 
-    def play(self, clear_playlist=False):
+    def play(self, clear_playlist=False, start_position=None):
 
         ''' Create and add listitems to the Kodi playlist. 
             Base PlayMedia scenario on playlist size.
         '''
         self.info['KodiPlaylist'] = self.set_playlist()
-        if clear_playlist:
+
+        if clear_playlist or window('emby.playlist.clear.bool'):
+
+            LOG.info("[ clear playlist ]")
             self.info['KodiPlaylist'].clear()
+            window('emby.playlist.clear', clear=True)
+            window('emby.autoplay', clear=True)
 
         pl_size = int(bool(self.info['KodiPlaylist'].size()))
-        self.info['StartIndex'] = max(self.info['KodiPlaylist'].getposition(), 0)
+        self.info['StartIndex'] = start_position if start_position is not None else max(self.info['KodiPlaylist'].getposition(), 0)
         self.info['Index'] = self.info['StartIndex'] + pl_size
         LOG.info("[ play/%s/%s ]", self.info['Id'], self.info['Index'])
         window('emby.playlist.start', str(self.info['Index']))
 
         listitem = xbmcgui.ListItem()
-
-        try:
-            self._set_playlist(listitem)
-        except Exception as error:
-            if not xbmc.Player().isPlaying():
-
-                self.info['KodiPlaylist'].clear()
-                xbmc.Player().stop()
-
-            raise
+        self._set_playlist(listitem)
 
         count = 20
 
@@ -108,14 +107,56 @@ class PlayPlugin(Play):
 
             count -= 1
         else:
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
-            
+            try:
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
+            except Exception:
+                pass
+
             if not pl_size:
-                xbmc.Player().play(self.info['KodiPlaylist'], startpos=self.info['StartIndex'], windowed=False)
+                LOG.info("hello world")
+                self.start_playback(self.info['StartIndex'])
             else:
                 xbmc.sleep(2000)
                 self.remove_from_playlist(self.info['StartIndex'])
 
+        return self.info['Index']
+
+    def play_folder(self, position=None):
+
+        ''' When an entire queue is requested, 
+            If requested from Kodi, MediaType is provided, add as Kodi would,
+            otherwise queue playlist items using strm links to setup playback later.
+        '''
+        self.info['StartIndex'] = position or max(self.info['KodiPlaylist'].size(), 0)
+        self.info['Index'] = self.info['StartIndex']
+        LOG.info("[ play folder/%s/%s ]", self.info['Id'], self.info['Index'])
+
+        if self.info['DbId'] and self.info['MediaType']:
+            self.add_to_playlist(self.info['MediaType'], self.info['DbId'], self.info['Index'])
+            self.info['Index'] += 1
+
+        elif self.info['Item']['MediaType'] == 'Audio':
+            listitem = xbmcgui.ListItem()
+            self._set_playlist(listitem)
+        else:
+            listitem = xbmcgui.ListItem()
+            self.set_listitem(self.info['Item'], listitem, self.info['DbId'])
+            url = "plugin://plugin.video.emby?mode=play&id=%s" % self.info['Id']
+
+            if self.info['DbId']:
+                url += "&dbid=%s" % self.info['DbId']
+
+            if self.info['ServerId']:
+                url += "&server=%s" % self.info['ServerId']
+
+            if self.info['Transcode']:
+                url += "&transcode=true"
+
+            listitem.setPath(url)
+            self.add_listitem(url, listitem, self.info['Index'])
+            self.info['Index'] += 1
+
+        return self.info['Index']
 
     def _set_playlist(self, listitem):
 
@@ -130,7 +171,7 @@ class PlayPlugin(Play):
 
         LOG.info("[ main/%s/%s ] %s", self.info['Item']['Id'], self.info['Index'], self.info['Item']['Name'])
         play = playutils.PlayUtils(self.info['Item'], self.info['Transcode'], self.info['ServerId'], self.info['ServerAddress'])
-        source = play.select_source(play.get_sources())
+        source = play.select_source(play.get_sources(self.info['MediaSourceId']), self.info['AudioIndex'], self.info['SubtitleIndex'])
 
         if not source:
             raise Exception("SelectionCancel")
