@@ -348,6 +348,12 @@
 		"Runtime": "CurrentProgram/RunTimeTicks",
 		"MediaType": "MediaType"
 	},
+	"BrowseFolder": {
+		"Id": "Id",
+		"Title": "Name",
+		"Type": "Type",
+		"Overview": "Overview"
+	},
 	"UpNext": {
 		"episodeid": "Id",
 		"tvshowid": "SeriesId",

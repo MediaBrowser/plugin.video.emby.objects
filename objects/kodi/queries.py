@@ -188,13 +188,25 @@ get_show_by_unique_id = """ SELECT  idShow
                             FROM    tvshow_view 
                             WHERE   uniqueid_value = ? 
                         """
-
 get_total_episodes =    """ SELECT  totalCount 
                             FROM    tvshowcounts 
                             WHERE   idShow = ?
                         """
 get_total_episodes_obj =    [   "{ParentId}"
                             ]
+get_artwork =           """ SELECT  url 
+                            FROM 	art 
+                            WHERE 	media_type != 'actor'
+                        """
+get_settings = 			""" SELECT 	idFile, Deinterlace, ViewMode, ZoomAmount, PixelRatio,
+									VerticalShift, AudioStream, SubtitleStream, SubtitleDelay,
+									SubtitlesOn, Brightness, Contrast, Gamma, 
+									VolumeAmplification, AudioDelay, ResumeTime, Sharpness,
+									NoiseReduction, NonLinStretch, PostProcess, ScalingMethod,
+									StereoMode, StereoInvert, VideoStream
+							FROM 	settings
+							Where 	idFile = ?
+						"""
 
 
 
@@ -471,6 +483,21 @@ update_episode_obj =        [   "{Title}","{Plot}","{RatingId}","{Writers}","{Pr
                                 "{Season}","{Index}","{Title}","{AirsBeforeSeason}","{AirsBeforeEpisode}","{SeasonId}",
                                 "{ShowId}","{EpisodeId}"
                             ]
+
+update_settings = 		""" INSERT OR REPLACE INTO settings(idFile, Deinterlace, ViewMode, ZoomAmount, PixelRatio,
+															VerticalShift, AudioStream, SubtitleStream, SubtitleDelay,
+															SubtitlesOn, Brightness, Contrast, Gamma, 
+															VolumeAmplification, AudioDelay, ResumeTime, Sharpness,
+															NoiseReduction, NonLinStretch, PostProcess, ScalingMethod,
+															StereoMode, StereoInvert, VideoStream)
+							VALUES 							(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+															 ?, ?, ?, ?)
+						"""
+update_settings_obj = 		[ 	"{FileId}","{Deinterlace}","{ViewMode}","{ZoomAmount}","{PixelRatio}","{VerticalShift}",
+								"{AudioStream}","{SubtitleStream}","{SubtitleDelay}","{SubtitlesOn}","{Brightness}",
+								"{Contrast}","{Gamma}","{VolumeAmplification}","{AudioDelay}",0,"{Sharpness}",
+								"{NoiseReduction}","{NonLinStretch}","{PostProcess}","{ScalingMethod}","{StereoMode}",0,-1
+							]
 
 
 

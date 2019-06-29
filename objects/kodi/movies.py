@@ -4,8 +4,7 @@
 
 import logging
 
-from kodi import Kodi
-import queries as QU
+from objects.kodi import Kodi, queries as QU
 
 ##################################################################################################
 
@@ -20,7 +19,7 @@ class Movies(Kodi):
     def __init__(self, cursor):
 
         self.cursor = cursor
-        Kodi.__init__(self)
+        Kodi.__init__(self, cursor)
 
     def create_entry_unique_id(self):
         self.cursor.execute(QU.create_unique_id)

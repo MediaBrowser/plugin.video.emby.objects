@@ -7,8 +7,8 @@ import datetime
 import logging
 import urllib
 
-from obj import Objects
-from kodi import Music as KodiDb, queries_music as QU
+from objects.core import Objects
+from objects.kodi import Music as KodiDb, queries_music as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, values, library_check, settings, Local
 
@@ -341,6 +341,12 @@ class Music(KodiDb):
         ''' Get the path and filename and build it into protocol://path
         '''
         obj['Path'] = api.get_file_path(obj['Path'])
+
+        if not obj['Path']:
+            LOG.info("Path is missing")
+
+            return False
+
         obj['Filename'] = obj['Path'].rsplit('\\', 1)[1] if '\\' in obj['Path'] else obj['Path'].rsplit('/', 1)[1]
 
         if self.direct_path:
@@ -353,6 +359,8 @@ class Music(KodiDb):
         else:
             obj['Path'] = "%s/emby/Audio/%s/" % (self.server['auth/server-address'], obj['Id'])
             obj['Filename'] = "stream.%s?static=true" % obj['Container']
+
+        return True
 
     def song_artist_discography(self, obj):
         

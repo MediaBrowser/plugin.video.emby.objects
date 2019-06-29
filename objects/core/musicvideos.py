@@ -7,8 +7,8 @@ import logging
 import re
 import urllib
 
-from obj import Objects
-from kodi import MusicVideos as KodiDb, queries as QU
+from objects.core import Objects
+from objects.kodi import MusicVideos as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, library_check, emby_item, values, Local
 
@@ -20,6 +20,7 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 
 class MusicVideos(KodiDb):
+
 
     def __init__(self, server, embydb, videodb, direct_path, *args, **kwargs):
 
@@ -95,7 +96,8 @@ class MusicVideos(KodiDb):
         obj['Streams'] = API.media_streams(obj['Video'], obj['Audio'], obj['Subtitles'])
         obj['Artwork'] = API.get_all_artwork(self.objects.map(item, 'Artwork'))
 
-        self.get_path_filename(obj)
+        if not self.get_path_filename(obj):
+            return
 
         if obj['Premiere']:
             obj['Premiere'] = str(obj['Premiere']).split('.')[0].replace('T', " ")
@@ -164,6 +166,11 @@ class MusicVideos(KodiDb):
         
         ''' Get the path and filename and build it into protocol://path
         '''
+        if not obj['Path']:
+            LOG.info("Path is missing")
+
+            return False
+
         obj['Filename'] = obj['Path'].rsplit('\\', 1)[1] if '\\' in obj['Path'] else obj['Path'].rsplit('/', 1)[1]
 
         if self.direct_path:
@@ -182,6 +189,8 @@ class MusicVideos(KodiDb):
                 'mode': "play"
             }
             obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
+
+        return True
 
 
     @stop()

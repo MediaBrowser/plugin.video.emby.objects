@@ -7,8 +7,8 @@ import logging
 import urllib
 
 import downloader as server
-from obj import Objects
-from kodi import Movies as KodiDb, queries as QU
+from objects.core import Objects
+from objects.kodi import Movies as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, library_check, values, settings, Local
 
@@ -21,12 +21,13 @@ LOG = logging.getLogger("EMBY."+__name__)
 
 class Movies(KodiDb):
 
-    def __init__(self, server, embydb, videodb, direct_path, *args, **kwargs):
+    def __init__(self, server, embydb, videodb, direct_path, update_library=False, *args, **kwargs):
 
         self.server = server
         self.emby = embydb
         self.video = videodb
         self.direct_path = direct_path
+        self.update_library = update_library
 
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
@@ -55,7 +56,21 @@ class Movies(KodiDb):
         '''
         API = api.API(item, self.server['auth/server-address'])
         obj = self.objects.map(item, 'Movie')
+        obj['Item'] = item
+        obj['Library'] = library
+        obj['LibraryId'] = library['Id']
+        obj['LibraryName'] = library['Name']
         update = True
+
+        if not self.update_library:
+            obj['Item']['Id'] = self.server['api'].is_valid_movie(obj['LibraryId'], obj['Title'], obj['Id'])
+
+            if str(obj['Item']['Id']) != obj['Id']:
+
+                self.remove(obj['Id'])
+                LOG.info("Skipping stacked movie %s [%s]", obj['Title'], obj['Id'])
+
+                return 
 
         try:
             obj['MovieId'] = e_item[0]
@@ -76,8 +91,6 @@ class Movies(KodiDb):
             obj['CriticRating'] = None
 
         obj['Path'] = API.get_file_path(obj['Path'])
-        obj['LibraryId'] = library['Id']
-        obj['LibraryName'] = library['Name']
         obj['Genres'] = obj['Genres'] or []
         obj['Studios'] = [API.validate_studio(studio) for studio in (obj['Studios'] or [])]
         obj['People'] = obj['People'] or []
@@ -97,7 +110,9 @@ class Movies(KodiDb):
         obj['Audio'] = API.audio_streams(obj['Audio'] or [])
         obj['Streams'] = API.media_streams(obj['Video'], obj['Audio'], obj['Subtitles'])
 
-        self.get_path_filename(obj)
+        if not self.get_path_filename(obj):
+            return
+
         self.trailer(obj)
 
         if obj['Countries']:
@@ -187,6 +202,11 @@ class Movies(KodiDb):
 
         ''' Get the path and filename and build it into protocol://path
         '''
+        if not obj['Path']:
+            LOG.info("Path is missing")
+
+            return False
+
         obj['Filename'] = obj['Path'].rsplit('\\', 1)[1] if '\\' in obj['Path'] else obj['Path'].rsplit('/', 1)[1]
 
         if self.direct_path:
@@ -205,6 +225,8 @@ class Movies(KodiDb):
                 'mode': "play"
             }
             obj['Filename'] = "%s?%s" % (obj['Path'], urllib.urlencode(params))
+
+        return True
 
 
     @stop()
