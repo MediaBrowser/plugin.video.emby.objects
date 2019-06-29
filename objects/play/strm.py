@@ -39,7 +39,10 @@ class PlayStrm(Play):
             'KodiPlaylist': xbmc.PlayList(xbmc.PLAYLIST_VIDEO),
             'Server': Emby(server_id).get_client(),
             'MediaType': params.get('MediaType'),
-            'ServerAddress': Emby(server_id)['auth/server-address']
+            'ServerAddress': Emby(server_id)['auth/server-address'],
+            'AudioIndex': params.get('AudioIndex'),
+            'SubtitleIndex': params.get('SubtitleIndex'),
+            'MediaSourceId': params.get('MediaSourceId')
         }
         if self.info['Transcode'] is None:
              self.info['Transcode'] = settings('playFromTranscode.bool') if settings('playFromStream.bool') else None
@@ -48,15 +51,6 @@ class PlayStrm(Play):
         self._detect_play()
 
         LOG.info("--[ play strm ]")
-
-    def add_to_playlist(self, media_type, db_id, index=None, playlist_id=None):
-
-        playlist = playlist_id or self.info['KodiPlaylist'].getPlayListId()
-
-        if index is None:
-            JSONRPC('Playlist.Add').execute({'playlistid': playlist, 'item': {'%sid' % media_type: int(db_id)}})
-        else:
-            JSONRPC('Playlist.Insert').execute({'playlistid': playlist, 'position': index, 'item': {'%sid' % media_type: int(db_id)}})
 
     def _get_intros(self):
         self.info['Intros'] = self.info['Server']['api'].get_intros(self.info['Id'])
@@ -77,14 +71,15 @@ class PlayStrm(Play):
             self._get_item()
             self._get_additional_parts()
 
-    def start_playback(self, index=0):
-        xbmc.Player().play(self.info['KodiPlaylist'], startpos=index, windowed=False)
-
-    def play(self, start_position=None):
+    def play(self, clear_playlist=False, start_position=None):
 
         ''' Create and add listitems to the Kodi playlist.
         '''
         self.info['KodiPlaylist'] = self.set_playlist()
+        
+        if clear_playlist:
+            self.info['KodiPlaylist'].clear()
+
         self.info['StartIndex'] = start_position if start_position is not None else max(self.info['KodiPlaylist'].getposition(), 0)
         self.info['Index'] = self.info['StartIndex']
         LOG.info("[ play/%s/%s ]", self.info['Id'], self.info['Index'])
@@ -92,7 +87,7 @@ class PlayStrm(Play):
         listitem = xbmcgui.ListItem()
         self._set_playlist(listitem)
 
-        return self.info['StartIndex']
+        return self.info['Index']
 
     def play_folder(self, position=None):
 
@@ -101,11 +96,12 @@ class PlayStrm(Play):
             otherwise queue playlist items using strm links to setup playback later.
         '''
         self.info['StartIndex'] = position or max(self.info['KodiPlaylist'].size(), 0)
-        self.info['Index'] = self.info['StartIndex'] + 1
+        self.info['Index'] = self.info['StartIndex']
         LOG.info("[ play folder/%s/%s ]", self.info['Id'], self.info['Index'])
 
         if self.info['DbId'] and self.info['MediaType']:
             self.add_to_playlist(self.info['MediaType'], self.info['DbId'], self.info['Index'])
+            self.info['Index'] += 1
 
         elif self.info['Item']['MediaType'] == 'Audio':
             listitem = xbmcgui.ListItem()
@@ -126,6 +122,7 @@ class PlayStrm(Play):
 
             listitem.setPath(url)
             self.add_listitem(url, listitem, self.info['Index'])
+            self.info['Index'] += 1
 
         return self.info['Index']
 
@@ -142,7 +139,7 @@ class PlayStrm(Play):
 
         LOG.info("[ main/%s/%s ] %s", self.info['Item']['Id'], self.info['Index'], self.info['Item']['Name'])
         play = playutils.PlayUtilsStrm(self.info['Item'], self.info['Transcode'], self.info['ServerId'], self.info['Server'])
-        source = play.select_source(play.get_sources())
+        source = play.select_source(play.get_sources(self.info['MediaSourceId']), self.info['AudioIndex'], self.info['SubtitleIndex'])
 
         if not source:
             raise Exception("SelectionCancel")

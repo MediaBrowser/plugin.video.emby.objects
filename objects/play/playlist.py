@@ -23,19 +23,31 @@ PLAY = {
 
 class Playlist(object):
 
+    started = False
+
 
     def __init__(self, server_id, items, mode=None, seektime=None, mediasource_id=None, 
-                 audio=None, subtitle=None, *args, **kwargs):
+                 audio=None, subtitle=None, start_index=None, *args, **kwargs):
 
         self.server_id = server_id
         self.items = items
-        self.info = {}
+        self.info = {'StartIndex': start_index or 0}
 
         mode = mode or PLAY['PlayNow']
         LOG.info("--[ play playlist ]")
 
         self.play(mode, seektime, mediasource_id, audio, subtitle)
         self.play_playlist()
+
+    def _start_playback(self, play):
+
+        if self.started:
+            return
+
+        if self.info['Index'] > self.info['StartIndex']:
+
+            play.start_playback(self.info['StartIndex'])
+            self.started = True
 
     def play(self, mode, seektime=None, mediasource_id=None, audio=None, subtitle=None, *args, **kwargs):
 
@@ -44,11 +56,13 @@ class Playlist(object):
         params = {
             'Id': self.items.pop(0),
             'AudioIndex': audio,
-            'Subtitle': subtitle,
+            'SubtitleIndex': subtitle,
             'MediaSourceId': mediasource_id
         }
         if seektime:
             window('emby.resume.bool', True)
+        else:
+            window('emby.resume.bool', False)
 
         funcs = [self.play_now, self.play_next, self.play_last]
         funcs[mode](params, *args, **kwargs)
@@ -56,25 +70,24 @@ class Playlist(object):
     def play_now(self, params, *args, **kwargs):
 
         play = PlayStrm(params, self.server_id)
-        self.info['StartIndex'] = 0
-        self.info['Index'] = self.info['StartIndex']
-        play.info['KodiPlaylist'].clear()
-        self.info['Index'] = play.play()
+        self.info['Index'] = play.play(True)
         self.info['KodiPlaylist'] = play.info['KodiPlaylist']
-        play.start_playback()
+        self._start_playback(play)
 
     def play_next(self, params, *args, **kwargs):
 
         play = PlayStrm(params, self.server_id)
         pl_size = max(play.info['KodiPlaylist'].size(), 0)
         self.info['StartIndex'] = max(play.info['KodiPlaylist'].getposition(), 0) + int(bool(pl_size))
-        self.info['Index'] = play.play(self.info['StartIndex'])
+        self.info['Index'] = play.play(start_position=self.info['StartIndex'])
+        self.info['KodiPlaylist'] = play.info['KodiPlaylist']
 
     def play_last(self, params, *args, **kwargs):
 
         play = PlayStrm(params, self.server_id)
         self.info['StartIndex'] = max(play.info['KodiPlaylist'].size(), 0)
-        self.info['Index'] = play.play(self.info['StartIndex'])
+        self.info['Index'] = play.play(start_position=self.info['StartIndex'])
+        self.info['KodiPlaylist'] = play.info['KodiPlaylist']
 
     def play_playlist(self):
 
@@ -83,3 +96,4 @@ class Playlist(object):
             play = PlayStrm({'Id': item}, self.server_id)
             play.info['KodiPlaylist'] = self.info['KodiPlaylist']
             self.info['Index'] = play.play_folder(self.info['Index'])
+            self._start_playback(play)

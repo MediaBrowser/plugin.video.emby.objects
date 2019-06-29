@@ -32,6 +32,15 @@ class Play(object):
 
         return xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
 
+    def add_to_playlist(self, media_type, db_id, index=None, playlist_id=None):
+
+        playlist = playlist_id or self.info['KodiPlaylist'].getPlayListId()
+
+        if index is None:
+            JSONRPC('Playlist.Add').execute({'playlistid': playlist, 'item': {'%sid' % media_type: int(db_id)}})
+        else:
+            JSONRPC('Playlist.Insert').execute({'playlistid': playlist, 'position': index, 'item': {'%sid' % media_type: int(db_id)}})
+
     def add_listitem(self, url, listitem, index):
         self.info['KodiPlaylist'].add(url=url, listitem=listitem, index=self.info['Index'])
 
@@ -39,6 +48,9 @@ class Play(object):
 
         LOG.debug("[ removing ] %s", index)
         JSONRPC('Playlist.Remove').execute({'playlistid': self.info['KodiPlaylist'].getPlayListId(), 'position': index})
+
+    def start_playback(self, index=0):
+        xbmc.Player().play(self.info['KodiPlaylist'], startpos=int(index), windowed=False)
 
     def get_seektime(self):
 

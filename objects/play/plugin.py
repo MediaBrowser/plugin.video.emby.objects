@@ -31,13 +31,16 @@ class PlayPlugin(Play):
         self.info = {
             'Intros': None,
             'Item': None,
-            'Id': params.get('id'),
+            'Id': params.get('id', params.get('Id')),
             'DbId': params.get('dbid'),
             'Transcode': params.get('transcode') == 'true',
             'AdditionalParts': None,
             'ServerId': server_id,
             'KodiPlaylist': xbmc.PlayList(xbmc.PLAYLIST_VIDEO),
-            'ServerAddress': TheVoid('GetServerAddress', {'ServerId': server_id}).get()
+            'ServerAddress': TheVoid('GetServerAddress', {'ServerId': server_id}).get(),
+            'AudioIndex': params.get('AudioIndex'),
+            'SubtitleIndex': params.get('SubtitleIndex'),
+            'MediaSourceId': params.get('MediaSourceId')
         }
         if self.info['Transcode'] is None:
              self.info['Transcode'] = settings('playFromTranscode.bool') if settings('playFromStream.bool') else None
@@ -71,6 +74,7 @@ class PlayPlugin(Play):
         ''' Create and add listitems to the Kodi playlist.
         '''
         self.info['KodiPlaylist'] = self.set_playlist()
+
         if clear_playlist:
             self.info['KodiPlaylist'].clear()
 
@@ -92,7 +96,7 @@ class PlayPlugin(Play):
             pass
 
         if relaunch or max(self.info['KodiPlaylist'].getposition(), 0) == self.info['StartIndex']:
-            xbmc.Player().play(self.info['KodiPlaylist'], startpos=self.info['StartIndex'], windowed=False)
+            self.start_playback(self.info['StartIndex'])
         else:
             xbmc.sleep(1000)
             self.remove_from_playlist(self.info['StartIndex'])
@@ -110,7 +114,7 @@ class PlayPlugin(Play):
 
         LOG.info("[ main/%s/%s ] %s", self.info['Item']['Id'], self.info['Index'], self.info['Item']['Name'])
         play = playutils.PlayUtils(self.info['Item'], self.info['Transcode'], self.info['ServerId'], self.info['ServerAddress'])
-        source = play.select_source(play.get_sources())
+        source = play.select_source(play.get_sources(self.info['MediaSourceId']), self.info['AudioIndex'], self.info['SubtitleIndex'])
 
         if not source:
             raise Exception("SelectionCancel")
