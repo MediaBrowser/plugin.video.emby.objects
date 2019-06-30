@@ -2,6 +2,7 @@
     "17.*": {
         "desc": "Krypton objects",
         "objects": [
+            "171076057-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076057.zip",
             "171076056-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076056.zip",
             "171076032-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/krypton.zip"
         ]
@@ -9,6 +10,7 @@
     "beta-17.*": {
         "desc": "Krypton objects (beta)",
         "objects": [
+            "171076057-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076057.zip",
             "171076056-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076056.zip",
             "171076055-4.0.28-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076055.zip",
             "171076054-4.0.25-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076054.zip",
@@ -22,6 +24,7 @@
     "18.*": {
         "desc": "Leia objects",
         "objects": [
+            "181167243-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167243.zip",
             "181167242-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167242.zip",
             "181167211-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/leia.zip"
         ]
@@ -29,6 +32,7 @@
     "beta-18.*": {
         "desc": "Leia objects (beta)",
         "objects": [
+            "181167243-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167243.zip",
             "181167242-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167242.zip",
             "181167241-4.0.28-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167241.zip",
             "181167240-4.0.23-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167240.zip",
@@ -41,6 +45,7 @@
     "19.*": {
         "desc": "Matrix objects",
         "objects": [
+            "181167243-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167243.zip",
             "181167242-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167242.zip",
             "181167211-3.1.38-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/leia.zip"
         ]
@@ -48,6 +53,7 @@
     "beta-19.*": {
         "desc": "Matrix objects (beta)",
         "objects": [
+            "181167243-4.1.0-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167243.zip",
             "181167241-4.0.28-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167241.zip",
             "181167240-4.0.23-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167240.zip"
         ]
