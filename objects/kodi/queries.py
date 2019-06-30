@@ -577,3 +577,6 @@ delete_backdrops =  	"""	DELETE FROM	art
 							AND 		media_type = ? 
 							AND 		type LIKE ? 
 						"""
+delete_artwork = 		""" DELETE FROM art 
+							WHERE 		url = ?
+						"""
