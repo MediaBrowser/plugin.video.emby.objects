@@ -202,3 +202,6 @@ delete_song =			"""	DELETE FROM song
    						"""
 delete_rescan =         """ DELETE FROM versiontagscan
                         """
+delete_artwork =        """ DELETE FROM art 
+                            WHERE       url = ?
+                        """
