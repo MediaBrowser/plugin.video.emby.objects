@@ -31,6 +31,8 @@ class Artwork(object):
     def __init__(self, cursor):
 
         self.cursor = cursor
+        cursor.execute("PRAGMA database_list;")
+        self.is_music = 'MyMusic' in cursor.fetchall()[0][2]
         self.enable_cache = settings('enableTextureCache.bool')
         self.queue = Queue.Queue()
         self.thread_limit = 1 if settings('lowPowered.bool') else 2
@@ -165,16 +167,23 @@ class Artwork(object):
         ''' Delete cached artwork.
         '''
         with Database('texture') as texturedb:
+            cursor = texturedb.cursor
 
             try:
-                texturedb.cursor.execute(QUTEX.get_cache, (url,))
-                cached = texturedb.cursor.fetchone()[0]
+                cursor.execute(QUTEX.get_cache, (url,))
+                cached = cursor.fetchone()[0]
             except TypeError:
                 LOG.debug("Could not find cached url: %s", url)
             else:
                 thumbnails = xbmc.translatePath("special://thumbnails/%s" % cached).decode('utf-8')
                 xbmcvfs.delete(thumbnails)
-                texturedb.cursor.execute(QUTEX.delete_cache, (url,))
+                cursor.execute(QUTEX.delete_cache, (url,))
+
+                if self.is_music:
+                    self.cursor.execute(QUMU.delete_artwork, (url,))
+                else:
+                    self.cursor.execute(QU.delete_artwork, (url,))
+
                 LOG.info("DELETE cached %s", cached)
 
     def cache_textures(self):
