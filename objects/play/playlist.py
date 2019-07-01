@@ -44,7 +44,7 @@ class Playlist(object):
         if self.started:
             return
 
-        if self.info['Index'] > self.info['StartIndex']:
+        if self.info['Index'] >= self.info['StartIndex']:
 
             play.start_playback(self.info['StartIndex'])
             self.started = True
