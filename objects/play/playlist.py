@@ -45,7 +45,7 @@ class Playlist(object):
         if self.started:
             return
 
-        if self.info['Index'] > self.info['StartIndex']:
+        if self.info['Index'] >= self.info['StartIndex']:
 
             play.start_playback(self.info['StartIndex'])
             self.started = True
@@ -71,8 +71,7 @@ class Playlist(object):
     def play_now(self, params, *args, **kwargs):
 
         play = PlayPlugin(params, self.server_id)
-        play.info['KodiPlaylist'].clear()
-        self.info['Index'] = play.play_folder()
+        self.info['Index'] = play.play(True)
         self.info['KodiPlaylist'] = play.info['KodiPlaylist']
         self._start_playback(play)
 
