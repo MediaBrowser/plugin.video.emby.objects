@@ -7,7 +7,8 @@ import logging
 import xbmc
 import xbmcgui
 
-from objects.play import PlayPlugin
+from objects.play import Play
+from objects.play import PlayPlugin, PlayStrm
 from helper import window
 
 #################################################################################################
@@ -16,13 +17,14 @@ LOG = logging.getLogger("EMBY."+__name__)
 PLAY = {
     'PlayNow': 0,
     'PlayNext': 1,
-    'PlayLast': 2
+    'PlayLast': 2,
+    'PlayUpNext': 3
 }
 
 #################################################################################################
 
 
-class Playlist(object):
+class Playlist(Play):
 
     started = False
 
@@ -36,6 +38,7 @@ class Playlist(object):
 
         mode = mode or PLAY['PlayNow']
         LOG.info("--[ play playlist ]")
+        Play.__init__(self, server_id, None)
 
         self.play(mode, seektime, mediasource_id, audio, subtitle)
         self.play_playlist()
@@ -65,7 +68,7 @@ class Playlist(object):
         else:
             window('emby.resume.bool', False)
 
-        funcs = [self.play_now, self.play_next, self.play_last]
+        funcs = [self.play_now, self.play_next, self.play_last, self.play_upnext]
         funcs[mode](params, *args, **kwargs)
 
     def play_now(self, params, *args, **kwargs):
@@ -89,6 +92,20 @@ class Playlist(object):
         self.info['StartIndex'] = max(play.info['KodiPlaylist'].size(), 0)
         self.info['Index'] = play.play(start_position=self.info['StartIndex'])
         self.info['KodiPlaylist'] = play.info['KodiPlaylist']
+
+    def play_upnext(self, params, *args, **kwargs):
+
+        play = PlayStrm(params, self.server_id)
+        pl_size = max(play.info['KodiPlaylist'].size(), 0)
+        self.info['StartIndex'] = max(play.info['KodiPlaylist'].getposition(), 0) + int(bool(pl_size))
+        self.info['Index'] = play.play(start_position=self.info['StartIndex'])
+        self.info['KodiPlaylist'] = play.info['KodiPlaylist']
+        self._start_playback(play)
+
+        for i in reversed(range(self.info['KodiPlaylist'].size())):
+
+            if i >= self.info['Index']:
+                self.remove_from_playlist(i)
 
     def play_playlist(self):
 

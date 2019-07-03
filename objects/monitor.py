@@ -145,6 +145,7 @@ class Monitor(monitor.Monitor):
         '''
         LOG.info("[ reset autoplay ]")
         window('emby.autoplay', clear=True)
+        self.player.played = {}
 
     def Playlist_OnAdd(self, server, data, *args, **kwargs):
 

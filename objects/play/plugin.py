@@ -113,7 +113,6 @@ class PlayPlugin(Play):
                 pass
 
             if not pl_size:
-                LOG.info("hello world")
                 self.start_playback(self.info['StartIndex'])
             else:
                 xbmc.sleep(2000)
