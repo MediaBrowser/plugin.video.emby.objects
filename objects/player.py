@@ -124,7 +124,7 @@ class Player(player.Player):
             data['art']['tvshow.fanart'] = artwork['Backdrop'][0]
 
         next_info = {
-            'play_info': {'ItemIds': [data['episodeid']], 'ServerId': item['ServerId'], 'PlayCommand': 'PlayNow'},
+            'play_info': {'ItemIds': [data['episodeid']], 'ServerId': item['ServerId'], 'PlayCommand': 'PlayUpNext'},
             'current_episode': item['CurrentEpisode'],
             'next_episode': data
         }

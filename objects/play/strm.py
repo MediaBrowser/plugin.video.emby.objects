@@ -78,7 +78,10 @@ class PlayStrm(Play):
         self.info['KodiPlaylist'] = self.set_playlist()
         
         if clear_playlist:
+
+            LOG.info("[ clear playlist ]")
             self.info['KodiPlaylist'].clear()
+            xbmc.sleep(200)
 
         self.info['StartIndex'] = start_position if start_position is not None else max(self.info['KodiPlaylist'].getposition(), 0)
         self.info['Index'] = self.info['StartIndex']
