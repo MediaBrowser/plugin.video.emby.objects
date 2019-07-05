@@ -6,8 +6,7 @@ import logging
 
 import xbmc
 
-from objects.play import Play
-from objects.play import PlayPlugin, PlayStrm
+from objects.play import Play, PlayPlugin, PlayStrm
 from helper import window
 
 #################################################################################################
@@ -94,14 +93,43 @@ class Playlist(Play):
 
     def play_upnext(self, params, *args, **kwargs):
 
+        try: # Detect if watch now was used
+            player = xbmc.Player()
+            current_time = float(player.getTime())
+            total_time = float(player.getTotalTime())
+            play_next = bool(((total_time - current_time) / total_time) > 0.001)
+        except Exception:
+            play_next = True
+
         play = PlayStrm(params, self.server_id)
         pl_size = max(play.info['KodiPlaylist'].size(), 0)
         self.info['StartIndex'] = max(play.info['KodiPlaylist'].getposition(), 0) + int(bool(pl_size))
+        window('emby.playlist.start', str(self.info['StartIndex']))
+
         self.info['Index'] = play.play(start_position=self.info['StartIndex'])
         self.info['KodiPlaylist'] = play.info['KodiPlaylist']
-        self._start_playback(play)
 
+        count = 20
+
+        if xbmc.getCondVisibility('VideoPlayer.Content(livetv)'):
+            xbmc.Player().stop()
+
+        while not window('emby.playlist.ready.bool'):
+            xbmc.sleep(50)
+
+            if not count:
+                break
+
+            count -= 1
+
+        if play_next:
+
+            LOG.info("[ start playback ]")
+            self._start_playback(play)
+
+        window('emby.playlist.ready.bool', clear=True)
         xbmc.sleep(2000)
+
         for i in reversed(range(self.info['KodiPlaylist'].size())):
 
             if i >= self.info['Index']:
