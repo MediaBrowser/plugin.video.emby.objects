@@ -11,6 +11,7 @@ from objects.core import Objects
 from objects.kodi import Movies as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, library_check, values, settings, Local
+from helper import compare_version
 
 ##################################################################################################
 
@@ -28,6 +29,7 @@ class Movies(KodiDb):
         self.video = videodb
         self.direct_path = direct_path
         self.update_library = update_library
+        self.newer_server = compare_version(server['auth/server-version'], "4.2.0.0")
 
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
@@ -63,7 +65,11 @@ class Movies(KodiDb):
         update = True
 
         if not self.update_library:
-            obj['Item']['Id'] = self.server['api'].is_valid_movie(obj['LibraryId'], obj['Title'], obj['Id'])
+
+            if self.newer_server:
+                obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
+            else:
+                obj['Item']['Id'] = self.server['api'].is_valid_movie(obj['LibraryId'], obj['Title'], obj['Id'])
 
             if str(obj['Item']['Id']) != obj['Id']:
 

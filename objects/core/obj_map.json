@@ -41,7 +41,8 @@
 		"Video": "MediaSources/0/MediaStreams:?Type=Video",
 		"Container": "MediaSources/0/Container",
 		"EmbyParentId": "ParentId",
-		"CriticRating": "CriticRating"
+		"CriticRating": "CriticRating",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"MovieUserData": {
 		"Id": "Id",
@@ -56,7 +57,8 @@
 	"Boxset": {
 		"Id": "Id",
 		"Title": "Name",
-		"Overview": "Overview"
+		"Overview": "Overview",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"SeriesProviderName": "tvdb",
 	"Series": {
@@ -78,14 +80,16 @@
 		"Favorite": "UserData/IsFavorite",
 		"RecursiveCount": "RecursiveItemCount",
 		"EmbyParentId": "ParentId",
-		"Status": "Status"
+		"Status": "Status",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"Season": {
 		"Id": "Id",
 		"Index": "IndexNumber",
 		"SeriesId": "SeriesId",
 		"Location": "LocationType",
-		"Title": "Name"
+		"Title": "Name",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"EpisodeProviderName": "tvdb",
 	"Episode": {
@@ -119,7 +123,8 @@
 		"Video": "MediaSources/0/MediaStreams:?Type=Video",
 		"Container": "MediaSources/0/Container",
 		"Location": "LocationType",
-		"EmbyParentId": "SeriesId,ParentId"
+		"EmbyParentId": "SeriesId,ParentId",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"EpisodeUserData": {
 		"Id": "Id",
@@ -160,7 +165,8 @@
 		"Played": "UserData/Played",
 		"Favorite": "UserData/IsFavorite",
 		"Directors": "People:?Type=Director$Name",
-		"EmbyParentId": "ParentId"
+		"EmbyParentId": "ParentId",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"MusicVideoUserData": {
 		"Id": "Id",
@@ -178,7 +184,8 @@
 		"UniqueId": "ProviderIds/MusicBrainzArtist",
 		"Genres": "Genres",
 		"Bio": "Overview",
-		"EmbyParentId": "ParentId"
+		"EmbyParentId": "ParentId",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"Album": {
 		"Id": "Id",
@@ -190,7 +197,8 @@
 		"AlbumArtists": "AlbumArtists",
 		"Artists": "AlbumArtists:?$Name",
 		"ArtistItems": "ArtistItems",
-		"EmbyParentId": "ParentId"
+		"EmbyParentId": "ParentId",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"Song": {
 		"Id": "Id",
@@ -213,7 +221,8 @@
 		"Album": "Album",
 		"SongAlbumId": "AlbumId",
 		"Container": "MediaSources/0/Container",
-		"EmbyParentId": "ParentId"
+		"EmbyParentId": "ParentId",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"SongUserData": {
 		"Id": "Id",

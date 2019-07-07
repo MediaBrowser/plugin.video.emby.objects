@@ -13,6 +13,7 @@ from objects.core import Objects
 from objects.kodi import TVShows as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, library_check, settings, values, Local
+from helper import compare_version
 
 ##################################################################################################
 
@@ -30,6 +31,7 @@ class TVShows(KodiDb):
         self.video = videodb
         self.direct_path = direct_path
         self.update_library = update_library
+        self.newer_server = compare_version(server['auth/server-version'], "4.2.0.0")
 
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
@@ -83,8 +85,12 @@ class TVShows(KodiDb):
             obj['PathId'] = e_item[2]
         except TypeError as error:
 
-            if pooling is None:
-                obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
+            if not self.update_library and pooling is None:
+ 
+                if self.newer_server:
+                    obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
+                else:
+                    obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
 
                 if str(obj['Item']['Id']) != obj['Id']:
                     return self.tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
