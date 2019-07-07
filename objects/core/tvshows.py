@@ -93,7 +93,7 @@ class TVShows(KodiDb):
                     obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
 
                 if str(obj['Item']['Id']) != obj['Id']:
-                    return self.tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
+                    return TVShows(self.server, self.emby, self.video, self.direct_path, False).tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
 
             update = False
             LOG.debug("ShowId %s not found", obj['Id'])
@@ -211,7 +211,7 @@ class TVShows(KodiDb):
 
         self.add(*values(obj, QU.add_tvshow_obj))
         self.emby_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
-        LOG.info("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+        LOG.info("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Id'], obj['Title'])
 
     def tvshow_update(self, obj):
         
@@ -225,7 +225,7 @@ class TVShows(KodiDb):
 
         self.update(*values(obj, QU.update_tvshow_obj))
         self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+        LOG.info("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Id'], obj['Title'])
 
     def get_path_filename(self, obj):
 
@@ -489,7 +489,7 @@ class TVShows(KodiDb):
         if obj['ShowId'] is None:
 
             try:
-                self.tvshow(self.server['api'].get_item(obj['SeriesId']), library=None, redirect=True)
+                TVShows(self.server, self.emby, self.video, self.direct_path, False).tvshow(self.server['api'].get_item(obj['SeriesId']), library=None, redirect=True)
                 obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
             except (TypeError, KeyError):
                 LOG.error("Unable to add series %s", obj['SeriesId'])
