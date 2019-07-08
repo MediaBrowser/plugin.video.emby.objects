@@ -13,6 +13,7 @@ from objects.core import Objects
 from objects.kodi import TVShows as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, library_check, settings, values, Local
+from helper import compare_version
 
 ##################################################################################################
 
@@ -30,6 +31,7 @@ class TVShows(KodiDb):
         self.video = videodb
         self.direct_path = direct_path
         self.update_library = update_library
+        self.newer_server = compare_version(server['auth/server-version'], "4.2.0.0")
 
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
@@ -84,11 +86,15 @@ class TVShows(KodiDb):
             obj['PathId'] = e_item[2]
         except TypeError as error:
 
-            if pooling is None:
-                obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
+            if not self.update_library and pooling is None:
+ 
+                if self.newer_server:
+                    obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
+                else:
+                    obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
 
                 if str(obj['Item']['Id']) != obj['Id']:
-                    return self.tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
+                    return TVShows(self.server, self.emby, self.video, self.direct_path, False).tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
 
             update = False
             LOG.debug("ShowId %s not found", obj['Id'])
@@ -206,7 +212,7 @@ class TVShows(KodiDb):
 
         self.add(*values(obj, QU.add_tvshow_obj))
         self.emby_db.add_reference(*values(obj, QUEM.add_reference_tvshow_obj))
-        LOG.info("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+        LOG.info("ADD tvshow [%s/%s/%s] %s: %s", obj['TopPathId'], obj['PathId'], obj['ShowId'], obj['Id'], obj['Title'])
 
     def tvshow_update(self, obj):
         
@@ -220,7 +226,7 @@ class TVShows(KodiDb):
 
         self.update(*values(obj, QU.update_tvshow_obj))
         self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
-        LOG.info("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Title'], obj['Id'])
+        LOG.info("UPDATE tvshow [%s/%s] %s: %s", obj['PathId'], obj['ShowId'], obj['Id'], obj['Title'])
 
     def get_path_filename(self, obj):
 
@@ -476,7 +482,7 @@ class TVShows(KodiDb):
         if obj['ShowId'] is None:
 
             try:
-                self.tvshow(self.server['api'].get_item(obj['SeriesId']), library=None, redirect=True)
+                TVShows(self.server, self.emby, self.video, self.direct_path, False).tvshow(self.server['api'].get_item(obj['SeriesId']), library=None, redirect=True)
                 obj['ShowId'] = self.emby_db.get_item_by_id(*values(obj, QUEM.get_item_series_obj))[0]
             except (TypeError, KeyError):
                 LOG.error("Unable to add series %s", obj['SeriesId'])
