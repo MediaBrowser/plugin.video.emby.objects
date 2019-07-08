@@ -67,6 +67,7 @@ class Monitor(monitor.Monitor):
         self.player.report_playback(data.get('Report', True))
 
     def Play(self, server, data, *args, **kwargs):
+        LOG.info(data)
         playlist.Playlist(data.get('ServerId'), data['ItemIds'], playlist.PLAY.get(data['PlayCommand']),
                           data.get('StartPositionTicks', 0), data.get('MediaSourceId'), data.get('AudioStreamIndex'),
                           data.get('SubtitleStreamIndex'), data.get('StartIndex'))
@@ -190,5 +191,9 @@ class Monitor(monitor.Monitor):
 
     def Playlist_OnClear(self, server, data, *args, **kwargs):
 
+        self.player.played = {}
+
         if data['playlistid']:
+
+            LOG.info("[ reset autoplay ]")
             window('emby.autoplay', clear=True)
