@@ -4,6 +4,8 @@
 
 import logging
 
+import xbmc
+
 from hooks import player
 from objects.core import Objects
 from helper import _, api, window, event, silent_catch, JSONRPC
@@ -88,12 +90,20 @@ class Player(player.Player):
         self.up_next = False
 
         current_file = self.get_playing_file()
-        item = self.set_item(current_file)
+        item = self.set_item(current_file, False)
 
         if not item:
             return
 
         window('emby.skip.%s.bool' % item['Id'], True)
+        xbmc.sleep(2000)
+
+        if item['PlayOption'] == 'Addon' and item['AutoSwitched'] == 'External':
+            LOG.info("[ setting up audio sub track ]")
+            self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
+
+        item['Track'] = True
+        LOG.info('enable tracking')
 
     def onPlayBackStarted(self):
 

@@ -33,6 +33,7 @@ class Playlist(Play):
         self.server_id = server_id
         self.items = items
         self.info = {'StartIndex': start_index or 0}
+        self.player = xbmc.Player()
 
         mode = mode or PLAY['PlayNow']
         LOG.info("--[ play playlist ]")
@@ -71,6 +72,9 @@ class Playlist(Play):
 
     def play_now(self, params, *args, **kwargs):
 
+        if self.player.isPlaying():
+            self.player.stop()
+
         play = PlayStrm(params, self.server_id)
         self.info['Index'] = play.play(True)
         self.info['KodiPlaylist'] = play.info['KodiPlaylist']
@@ -94,7 +98,6 @@ class Playlist(Play):
     def play_upnext(self, params, *args, **kwargs):
 
         try: # Detect if watch now was used
-            player = xbmc.Player()
             current_time = float(player.getTime())
             total_time = float(player.getTotalTime())
             play_next = bool(((total_time - current_time) / total_time) > 0.001)
