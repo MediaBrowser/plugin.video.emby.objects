@@ -9,6 +9,7 @@ import xbmc
 import xbmcaddon
 
 from objects.core import ListItem
+from objects.utils import get_play_action
 from dialogs import resume
 from helper import _, window, api, JSONRPC
 
@@ -70,7 +71,10 @@ class Play(object):
         elif seektime is None and self.info['Item']['MediaType'] in ('Video', 'Audio'):
             resume = self.info['Item']['UserData'].get('PlaybackPositionTicks')
 
-            if resume:
+            if get_play_action() == 'Resume':
+                seektime = True
+
+            elif resume:
 
                 adjusted = api.API(self.info['Item'], self.info['ServerAddress']).adjust_resume((resume or 0) / 10000000.0)
                 seektime = self.resume_dialog(adjusted, self.info['Item'])
