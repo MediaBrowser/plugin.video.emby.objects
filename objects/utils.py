@@ -26,7 +26,7 @@ def get_play_action():
     try:
         return options[result['result']['value']]
     except Exception as error:
-        log.error("Returning play action due to error: %s", error)
+        LOG.error("Returning play action due to error: %s", error)
 
         return options[1]
 
