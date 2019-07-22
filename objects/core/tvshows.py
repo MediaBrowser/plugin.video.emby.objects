@@ -31,7 +31,6 @@ class TVShows(KodiDb):
         self.video = videodb
         self.direct_path = direct_path
         self.update_library = update_library
-        self.newer_server = compare_version(server['auth/server-version'], "4.2.0.0")
 
         self.emby_db = emby_db.EmbyDatabase(embydb.cursor)
         self.objects = Objects()
@@ -77,7 +76,7 @@ class TVShows(KodiDb):
         if not settings('syncEmptyShows.bool') and not obj['RecursiveCount']:
 
             LOG.info("Skipping empty show %s: %s", obj['Title'], obj['Id'])
-            self.remove(obj['Id'])
+            TVShows(self.server, self.emby, self.video, self.direct_path, False).remove(obj['Id'])
 
             return False
 
@@ -86,15 +85,23 @@ class TVShows(KodiDb):
             obj['PathId'] = e_item[2]
         except TypeError as error:
 
-            if not self.update_library and pooling is None:
- 
-                if self.newer_server:
+            if pooling is None:
+                verify = False
+
+                if obj['PresentationKey']: # 4.2.0.23+
+
+                    verify = True
                     obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
-                else:
+
+                elif not self.update_library: # older server
+
+                    verify = True
                     obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
 
-                if str(obj['Item']['Id']) != obj['Id']:
-                    return TVShows(self.server, self.emby, self.video, self.direct_path, False).tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
+                if verify:
+
+                    if str(obj['Item']['Id']) != obj['Id']:
+                        return TVShows(self.server, self.emby, self.video, self.direct_path, False).tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
 
             update = False
             LOG.debug("ShowId %s not found", obj['Id'])
@@ -309,21 +316,30 @@ class TVShows(KodiDb):
 
             return
 
-        elif not self.update_library:
-            obj['Item']['Id'] = self.server['api'].is_valid_episode(obj['SeriesId'], obj['Title'], obj['Id'])
-
-            if str(obj['Item']['Id']) != obj['Id']:
-
-                self.remove(obj['Id'])
-                LOG.info("Skipping stacked episode %s [%s]", obj['Title'], obj['Id'])
-
-                return
-
         try:
             obj['EpisodeId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
         except TypeError as error:
+            verify = False
+
+            if obj['PresentationKey']: # 4.2.0.23+
+
+                verify = True
+                obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
+
+            elif not self.update_library: # older server
+
+                verify = True
+                obj['Item']['Id'] = self.server['api'].is_valid_episode(obj['SeriesId'], obj['Title'], obj['Id'])
+
+            if verify:
+                if str(obj['Item']['Id']) != obj['Id']:
+
+                    LOG.info("Skipping stacked episode %s [%s]", obj['Title'], obj['Id'])
+                    TVShows(self.server, self.emby, self.video, self.direct_path, False).remove(obj['Id'])
+
+                    return False
 
             update = False
             LOG.debug("EpisodeId %s not found", obj['Id'])
