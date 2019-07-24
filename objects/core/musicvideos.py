@@ -85,7 +85,7 @@ class MusicVideos(KodiDb):
         obj['PlayCount'] = API.get_playcount(obj['Played'], obj['PlayCount'])
         obj['Resume'] = API.adjust_resume((obj['Resume'] or 0) / 10000000.0)
         obj['Runtime'] = round(float((obj['Runtime'] or 0) / 10000000.0), 6)
-        obj['Premiere'] = Local(obj['Premiere']) if obj['Premiere'] else datetime.date(obj['Year'][:4] if obj['Year'] else 2021, 1, 1)
+        obj['Premiere'] = Local(obj['Premiere']) if obj['Premiere'] else datetime.date(int(str(obj['Year'])[:4]) if obj['Year'] else 2021, 1, 1)
         obj['Genre'] = " / ".join(obj['Genres'])
         obj['Studio'] = " / ".join(obj['Studios'])
         obj['Artists'] = " / ".join(obj['Artists'] or [])
