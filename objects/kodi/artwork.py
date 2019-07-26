@@ -97,17 +97,17 @@ class Artwork(object):
         for art in KODI:
 
             if art == 'Backdrop':
+
+                num_backdrops = len(artwork['Backdrop'])
                 self.cursor.execute(QU.get_backdrops, args + ("fanart%",))
 
-                if len(self.cursor.fetchall()) > len(artwork['Backdrop']):
+                if len(self.cursor.fetchall()) > num_backdrops:
                     self.cursor.execute(QU.delete_backdrops, args + ("fanart_",))
 
-                for index, backdrop in enumerate(artwork['Backdrop']):
+                self.update(*(artwork['Backdrop'][0] if num_backdrops else "",) + args + ("fanart",))
 
-                    if index:
-                        self.update(*(backdrop,) + args + ("%s%s" % ("fanart", index),))
-                    else:
-                        self.update(*(backdrop,) + args + ("fanart",))
+                for index, backdrop in enumerate(artwork['Backdrop'][1:]):
+                    self.update(*(backdrop,) + args + ("%s%s" % ("fanart", index + 1),))
 
             elif art == 'Primary':
                 for kodi_image in KODI['Primary']:
