@@ -11,7 +11,6 @@ from objects.core import Objects
 from objects.kodi import Movies as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, library_check, values, settings, Local
-from helper import compare_version
 
 ##################################################################################################
 
@@ -161,8 +160,12 @@ class Movies(KodiDb):
 
         ''' Add object to kodi.
         '''
+        obj['RatingType'] = "default"
         obj['RatingId'] = self.create_entry_rating()
         self.add_ratings(*values(obj, QU.add_rating_movie_obj))
+
+        if obj['CriticRating'] is not None:
+            self.add_ratings(*values(dict(obj, RatingId=self.create_entry_rating(), RatingType="rottentomatoes", Rating=float(obj['CriticRating']/10.0)), QU.add_rating_movie_obj))
 
         obj['Unique'] = self.create_entry_unique_id()
         self.add_unique_id(*values(obj, QU.add_unique_id_movie_obj))
@@ -178,8 +181,15 @@ class Movies(KodiDb):
 
         ''' Update object to kodi.
         '''
+        obj['RatingType'] = "default"
         obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_movie_obj))
         self.update_ratings(*values(obj, QU.update_rating_movie_obj))
+
+        if obj['CriticRating'] is not None:
+
+            temp_obj = dict(obj, RatingType="rottentomatoes", Rating=float(obj['CriticRating']/10.0))
+            temp_obj['RatingId'] = self.get_rating_id(*values(temp_obj, QU.get_rating_movie_obj))
+            self.update_ratings(*values(temp_obj, QU.update_rating_movie_obj))
 
         obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_movie_obj))
         self.update_unique_id(*values(obj, QU.update_unique_id_movie_obj))

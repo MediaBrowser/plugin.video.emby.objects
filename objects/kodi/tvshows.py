@@ -26,11 +26,6 @@ class TVShows(Kodi):
         
         return self.cursor.fetchone()[0] + 1
 
-    def create_entry_rating(self):
-        self.cursor.execute(QU.create_rating)
-
-        return self.cursor.fetchone()[0] + 1
-
     def create_entry(self):
         self.cursor.execute(QU.create_tvshow)
 
@@ -63,21 +58,6 @@ class TVShows(Kodi):
             return self.cursor.fetchone()[0]
         except TypeError:
             return
-
-    def get_rating_id(self, *args):
-
-        try:
-            self.cursor.execute(QU.get_rating, args)
-            
-            return self.cursor.fetchone()[0]
-        except TypeError:
-            return
-
-    def add_ratings(self, *args):
-        self.cursor.execute(QU.add_rating, args)
-
-    def update_ratings(self, *args):
-        self.cursor.execute(QU.update_rating, args)
 
     def get_total_episodes(self, *args):
 
