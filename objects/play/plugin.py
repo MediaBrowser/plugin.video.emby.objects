@@ -13,7 +13,7 @@ import xbmcgui
 import xbmcplugin
 
 from objects.play import Play
-from downloader import TheVoid
+from emby import Emby
 from helper import _, playutils, api, window, settings, dialog, JSONRPC
 
 #################################################################################################
@@ -37,7 +37,8 @@ class PlayPlugin(Play):
             'AdditionalParts': None,
             'ServerId': server_id,
             'KodiPlaylist': xbmc.PlayList(xbmc.PLAYLIST_VIDEO),
-            'ServerAddress': TheVoid('GetServerAddress', {'ServerId': server_id}).get(),
+            'Server': Emby(server_id).get_client(),
+            'ServerAddress': Emby(server_id)['auth/server-address'],
             'AudioIndex': params.get('AudioIndex'),
             'SubtitleIndex': params.get('SubtitleIndex'),
             'MediaSourceId': params.get('MediaSourceId')
@@ -45,19 +46,10 @@ class PlayPlugin(Play):
         if self.info['Transcode'] is None:
              self.info['Transcode'] = settings('playFromTranscode.bool') if settings('playFromStream.bool') else None
 
-        Play.__init__(self, self.info['ServerId'], self.info['ServerAddress'])
+        Play.__init__(self, self.info['ServerAddress'])
         self._detect_play()
 
         LOG.info("--[ play plugin ]")
-
-    def _get_intros(self):
-        self.info['Intros'] = TheVoid('GetIntros', {'ServerId': self.info['ServerId'], 'Id': self.info['Id']}).get()
-
-    def _get_additional_parts(self):
-        self.info['AdditionalParts'] = TheVoid('GetAdditionalParts', {'ServerId': self.info['ServerId'], 'Id': self.info['Id']}).get()
-
-    def _get_item(self):
-        self.info['Item'] = TheVoid('GetItem', {'Id': self.info['Id'], 'ServerId': self.info['ServerId']}).get()
 
     def _detect_play(self):
 
@@ -65,9 +57,9 @@ class PlayPlugin(Play):
         '''
         if self.info['Id']:
 
-            self._get_intros()
-            self._get_item()
-            self._get_additional_parts()
+            self.get_intros()
+            self.get_item()
+            self.get_additional_parts()
 
     def play(self, clear_playlist=False):
 
@@ -113,7 +105,7 @@ class PlayPlugin(Play):
             self.set_intros()
 
         LOG.info("[ main/%s/%s ] %s", self.info['Item']['Id'], self.info['Index'], self.info['Item']['Name'])
-        play = playutils.PlayUtils(self.info['Item'], self.info['Transcode'], self.info['ServerId'], self.info['ServerAddress'])
+        play = playutils.PlayUtils(self.info['Item'], self.info['Transcode'], self.info['Server'])
         source = play.select_source(play.get_sources(self.info['MediaSourceId']), self.info['AudioIndex'], self.info['SubtitleIndex'])
 
         if not source:
@@ -155,7 +147,7 @@ class PlayPlugin(Play):
                     listitem = xbmcgui.ListItem()
                     LOG.info("[ intro/%s/%s ] %s", intro['Id'], self.info['Index'], intro['Name'])
 
-                    play = playutils.PlayUtils(intro, False, self.info['ServerId'], self.info['ServerAddress'])
+                    play = playutils.PlayUtils(intro, False, self.info['Server'])
                     source = play.select_source(play.get_sources())
                     self.set_listitem(intro, listitem, intro=True)
                     listitem.setPath(intro['PlaybackInfo']['Path'])
@@ -175,7 +167,7 @@ class PlayPlugin(Play):
             listitem = xbmcgui.ListItem()
             LOG.info("[ part/%s/%s ] %s", part['Id'], self.info['Index'], part['Name'])
 
-            play = playutils.PlayUtils(part, False, self.info['ServerId'], self.info['ServerAddress'])
+            play = playutils.PlayUtils(part, False, self.info['Server'])
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
 
