@@ -13,7 +13,6 @@ from objects.core import Objects
 from objects.kodi import TVShows as KodiDb, queries as QU
 from database import emby_db, queries as QUEM
 from helper import api, catch, stop, validate, emby_item, library_check, settings, values, Local
-from helper import compare_version
 
 ##################################################################################################
 
@@ -225,7 +224,7 @@ class TVShows(KodiDb):
         
         ''' Update object to kodi.
         '''
-        obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_unique_id_tvshow_obj))
+        obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_tvshow_obj))
         self.update_ratings(*values(obj, QU.update_rating_tvshow_obj))
 
         obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))

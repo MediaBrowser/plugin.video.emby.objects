@@ -37,7 +37,7 @@ class Playlist(Play):
 
         mode = mode or PLAY['PlayNow']
         LOG.info("--[ play playlist ]")
-        Play.__init__(self, server_id, None)
+        Play.__init__(self)
 
         self.play(mode, seektime, mediasource_id, audio, subtitle)
         self.play_playlist()

@@ -22,8 +22,17 @@ LOG = logging.getLogger("EMBY.play")
 
 class Play(object):
 
-    def __init__(self, server_id, server, *args, **kwargs):
-        self.set_listitem = ListItem(server, server_id).set
+    def __init__(self, server_addr=None, *args, **kwargs):
+        self.set_listitem = ListItem(server_addr).set
+
+    def get_intros(self):
+        self.info['Intros'] = self.info['Server']['api'].get_intros(self.info['Id'])
+
+    def get_additional_parts(self):
+        self.info['AdditionalParts'] = self.info['Server']['api'].get_additional_parts(self.info['Id'])
+
+    def get_item(self):
+        self.info['Item'] = self.info['Server']['api'].get_item(self.info['Id'])
 
     def set_playlist(self):
 

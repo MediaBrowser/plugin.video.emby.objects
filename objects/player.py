@@ -103,7 +103,6 @@ class Player(player.Player):
             self.set_audio_subs(item['AudioStreamIndex'], item['SubtitleStreamIndex'])
 
         item['Track'] = True
-        LOG.info('enable tracking')
 
     def onPlayBackStarted(self):
 

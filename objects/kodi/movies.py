@@ -26,11 +26,6 @@ class Movies(Kodi):
 
         return self.cursor.fetchone()[0] + 1
 
-    def create_entry_rating(self):
-        self.cursor.execute(QU.create_rating)
-        
-        return self.cursor.fetchone()[0] + 1
-
     def create_entry(self):
         self.cursor.execute(QU.create_movie)
 
@@ -64,27 +59,6 @@ class Movies(Kodi):
 
         self.cursor.execute(QU.delete_movie, (kodi_id,))
         self.cursor.execute(QU.delete_file, (file_id,))
-
-    def get_rating_id(self, *args):
-
-        try:
-            self.cursor.execute(QU.get_rating, args)
-
-            return self.cursor.fetchone()[0]
-        except TypeError:
-            return None
-
-    def add_ratings(self, *args):
-
-        ''' Add ratings, rating type and votes.
-        '''
-        self.cursor.execute(QU.add_rating, args)
-
-    def update_ratings(self, *args):
-
-        ''' Update rating by rating_id.
-        '''
-        self.cursor.execute(QU.update_rating, args)
 
     def get_unique_id(self, *args):
 
