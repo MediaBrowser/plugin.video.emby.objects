@@ -112,10 +112,14 @@ get_rating =    		"""	SELECT 	rating_id
 							FROM 	rating 
 							WHERE 	media_type = ? 
 							AND 	media_id = ? 
+							AND 	rating_type = ? 
+							COLLATE NOCASE 
 						"""
-get_rating_movie_obj =      [   "movie","{MovieId}"
+get_rating_movie_obj =      [   "movie","{MovieId}","{RatingType}"
                             ]
-get_rating_episode_obj =    [   "episode","{EpisodeId}"
+get_rating_episode_obj =    [   "episode","{EpisodeId}","default"
+                            ]
+get_rating_tvshow_obj =  [   "tvshow","{ShowId}","default"
                             ]
 get_unique_id =     	"""	SELECT 	uniqueid_id 
 							FROM 	uniqueid 
@@ -303,7 +307,7 @@ add_movie_obj =             [   "{MovieId}","{FileId}","{Title}","{Plot}","{Shor
 add_rating =    		"""	INSERT INTO rating(rating_id, media_id, media_type, rating_type, rating, votes) 
     						VALUES 		(?, ?, ?, ?, ?, ?) 
     					"""
-add_rating_movie_obj =      [   "{RatingId}","{MovieId}","movie","default","{Rating}","{Votes}"
+add_rating_movie_obj =      [   "{RatingId}","{MovieId}","movie","{RatingType}","{Rating}","{Votes}"
                             ]
 add_rating_tvshow_obj =     [   "{RatingId}","{ShowId}","tvshow","default","{Rating}","{Votes}"
                             ]
@@ -417,7 +421,7 @@ update_rating =     	"""	UPDATE 	rating
     						SET 	media_id = ?, media_type = ?, rating_type = ?, rating = ?, votes = ? 
     						WHERE 	rating_id = ?
     					"""
-update_rating_movie_obj =   [   "{MovieId}","movie","default","{Rating}","{Votes}","{RatingId}"
+update_rating_movie_obj =   [   "{MovieId}","movie","{RatingType}","{Rating}","{Votes}","{RatingId}"
                             ]
 update_rating_tvshow_obj =  [   "{ShowId}","tvshow","default","{Rating}","{Votes}","{RatingId}"
                             ]

@@ -34,6 +34,11 @@ class Kodi(object):
 
         return self.cursor.fetchone()[0] + 1
 
+    def create_entry_rating(self):
+        self.cursor.execute(QU.create_rating)
+
+        return self.cursor.fetchone()[0] + 1
+
     def create_entry_person(self):
         self.cursor.execute(QU.create_person)
 
@@ -304,3 +309,24 @@ class Kodi(object):
             return
 
         self.cursor.execute(QU.delete_tag, (tag_id,) + args)
+
+    def get_rating_id(self, *args):
+
+        try:
+            self.cursor.execute(QU.get_rating, args)
+
+            return self.cursor.fetchone()[0]
+        except TypeError:
+            return self.create_entry_rating()
+
+    def add_ratings(self, *args):
+
+        ''' Add ratings, rating type and votes.
+        '''
+        self.cursor.execute(QU.add_rating, args)
+
+    def update_ratings(self, *args):
+
+        ''' Update rating by rating_id.
+        '''
+        self.cursor.execute(QU.update_rating, args)
