@@ -9,8 +9,8 @@ import xbmcgui
 import xbmcvfs
 
 from objects.play import Play
-from helper import _, settings, api, playutils, dialog, window, JSONRPC
 from emby import Emby
+from helper import _, settings, api, playutils, dialog, window, JSONRPC
 
 #################################################################################################
 
@@ -47,19 +47,10 @@ class PlayStrm(Play):
         if self.info['Transcode'] is None:
              self.info['Transcode'] = settings('playFromTranscode.bool') if settings('playFromStream.bool') else None
 
-        Play.__init__(self, self.info['ServerId'], self.info['ServerAddress'])
+        Play.__init__(self, self.info['ServerAddress'])
         self._detect_play()
 
         LOG.info("--[ play strm ]")
-
-    def _get_intros(self):
-        self.info['Intros'] = self.info['Server']['api'].get_intros(self.info['Id'])
-
-    def _get_additional_parts(self):
-        self.info['AdditionalParts'] = self.info['Server']['api'].get_additional_parts(self.info['Id'])
-
-    def _get_item(self):
-        self.info['Item'] = self.info['Server']['api'].get_item(self.info['Id'])
 
     def _detect_play(self):
 
@@ -67,9 +58,9 @@ class PlayStrm(Play):
         '''
         if self.info['Id']:
 
-            self._get_intros()
-            self._get_item()
-            self._get_additional_parts()
+            self.get_intros()
+            self.get_item()
+            self.get_additional_parts()
 
     def play(self, clear_playlist=False, start_position=None):
 
@@ -142,7 +133,7 @@ class PlayStrm(Play):
             self._set_intros()
 
         LOG.info("[ main/%s/%s ] %s", self.info['Item']['Id'], self.info['Index'], self.info['Item']['Name'])
-        play = playutils.PlayUtilsStrm(self.info['Item'], self.info['Transcode'], self.info['ServerId'], self.info['Server'])
+        play = playutils.PlayUtils(self.info['Item'], self.info['Transcode'], self.info['Server'])
         source = play.select_source(play.get_sources(self.info['MediaSourceId']), self.info['AudioIndex'], self.info['SubtitleIndex'])
 
         if not source:
@@ -184,7 +175,7 @@ class PlayStrm(Play):
                     listitem = xbmcgui.ListItem()
                     LOG.info("[ intro/%s/%s ] %s", intro['Id'], self.info['Index'], intro['Name'])
 
-                    play = playutils.PlayUtilsStrm(intro, False, self.info['ServerId'], self.info['Server'])
+                    play = playutils.PlayUtils(intro, False, self.info['Server'])
                     source = play.select_source(play.get_sources())
                     self.set_listitem(intro, listitem, intro=True)
                     listitem.setPath(intro['PlaybackInfo']['Path'])
@@ -204,7 +195,7 @@ class PlayStrm(Play):
             listitem = xbmcgui.ListItem()
             LOG.info("[ part/%s/%s ] %s", part['Id'], self.info['Index'], part['Name'])
 
-            play = playutils.PlayUtilsStrm(part, False, self.info['ServerId'], self.info['Server'])
+            play = playutils.PlayUtils(part, False, self.info['Server'])
             source = play.select_source(play.get_sources())
             play.set_external_subs(source, listitem)
 

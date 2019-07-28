@@ -11,9 +11,8 @@ import xbmcvfs
 import xbmcplugin
 
 from objects.play import Play
-from downloader import TheVoid
-from helper import _, settings, api, playutils, dialog, window
 from emby import Emby
+from helper import _, settings, api, playutils, dialog, window
 
 #################################################################################################
 
@@ -35,7 +34,8 @@ class PlaySingle(Play):
             'DbId': params.get('dbid'),
             'Transcode': params.get('transcode') == 'true',
             'ServerId': server_id,
-            'ServerAddress': TheVoid('GetServerAddress', {'ServerId': server_id}).get(),
+            'Server': Emby(server_id).get_client(),
+            'ServerAddress': Emby(server_id)['auth/server-address'],
             'AudioIndex': params.get('AudioIndex'),
             'SubtitleIndex': params.get('SubtitleIndex'),
             'MediaSourceId': params.get('MediaSourceId')
@@ -43,20 +43,17 @@ class PlaySingle(Play):
         if self.info['Transcode'] is None:
              self.info['Transcode'] = settings('playFromTranscode.bool') if settings('playFromStream.bool') else None
 
-        Play.__init__(self, self.info['ServerId'], self.info['ServerAddress'])
+        Play.__init__(self, self.info['ServerAddress'])
         self._detect_play()
 
         LOG.info("--[ play single ]")
-
-    def _get_item(self):
-        self.info['Item'] = TheVoid('GetItem', {'Id': self.info['Id'], 'ServerId': self.info['ServerId']}).get()
 
     def _detect_play(self):
 
         ''' Download all information needed to build the playlist for item requested.
         '''
         if self.info['Id']:
-            self._get_item()
+            self.get_item()
 
     def play(self):
 
@@ -78,7 +75,7 @@ class PlaySingle(Play):
         seektime = self.get_seektime()
 
         LOG.info("[ main/%s ] %s", self.info['Item']['Id'], self.info['Item']['Name'])
-        play = playutils.PlayUtils(self.info['Item'], self.info['Transcode'], self.info['ServerId'], self.info['ServerAddress'])
+        play = playutils.PlayUtils(self.info['Item'], self.info['Transcode'], self.info['Server'])
         source = play.select_source(play.get_sources(self.info['MediaSourceId']), self.info['AudioIndex'], self.info['SubtitleIndex'])
 
         if not source:
