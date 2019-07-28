@@ -53,7 +53,8 @@
 		"Favorite": "UserData/IsFavorite",
 		"PlayCount": "UserData/PlayCount",
 		"DatePlayed": "UserData/LastPlayedDate",
-		"Played": "UserData/Played"
+		"Played": "UserData/Played",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"Boxset": {
 		"Id": "Id",
@@ -136,7 +137,8 @@
 		"PlayCount": "UserData/PlayCount",
 		"DatePlayed": "UserData/LastPlayedDate",
 		"DateAdded": "DateCreated",
-		"Played": "UserData/Played"
+		"Played": "UserData/Played",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"MusicVideo": {
 		"Id": "Id",
@@ -231,7 +233,8 @@
 		"PlayCount": "UserData/PlayCount",
 		"DatePlayed": "UserData/LastPlayedDate",
 		"DateAdded": "DateCreated",
-		"Played": "UserData/Played"
+		"Played": "UserData/Played",
+		"PresentationKey": "PresentationUniqueKey"
 	},
 	"Artwork": {
 		"Id": "Id",
