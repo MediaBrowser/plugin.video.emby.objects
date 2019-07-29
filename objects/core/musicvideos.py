@@ -115,7 +115,7 @@ class MusicVideos(KodiDb):
                 obj['Index'] = search.group()
 
         tags = []
-        tags.extend(obj['Tags'] or [])
+        tags.extend(obj['TagItems'] or obj['Tags'] or [])
         tags.append(obj['LibraryName'])
 
         if obj['Favorite']:

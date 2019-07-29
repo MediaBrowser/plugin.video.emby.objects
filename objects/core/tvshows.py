@@ -132,7 +132,7 @@ class TVShows(KodiDb):
             obj['Premiere'] = str(Local(obj['Premiere'])).split('.')[0].replace('T', " ")
 
         tags = []
-        tags.extend(obj['Tags'] or [])
+        tags.extend(obj['TagItems'] or obj['Tags'] or [])
         tags.append(obj['LibraryName'])
 
         if obj['Favorite']:
