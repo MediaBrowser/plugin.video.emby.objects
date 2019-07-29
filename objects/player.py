@@ -149,6 +149,8 @@ class Player(player.Player):
         }
         if artwork['Backdrop']:
             data['art']['tvshow.fanart'] = artwork['Backdrop'][0]
+        if data['runtime']:
+            data['runtime'] = int(data['runtime'] / 10000000)
 
         next_info = {
             'play_info': {'ItemIds': [data['episodeid']], 'ServerId': item['ServerId'], 'PlayCommand': 'PlayUpNext'},

@@ -376,6 +376,7 @@
 		"season": "ParentIndexNumber",
 		"episode": "IndexNumber",
 		"rating": "CommunityRating",
-		"firstaired": "ProductionYear"
+		"firstaired": "ProductionYear",
+		"runtime": "RunTimeTicks"
 	}
 }
