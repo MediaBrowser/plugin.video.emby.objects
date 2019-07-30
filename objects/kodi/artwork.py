@@ -30,9 +30,12 @@ class Artwork(object):
 
     def __init__(self, cursor):
 
+        if cursor:
+
+            cursor.execute("PRAGMA database_list;")
+            self.is_music = 'MyMusic' in cursor.fetchall()[0][2]
+
         self.cursor = cursor
-        cursor.execute("PRAGMA database_list;")
-        self.is_music = 'MyMusic' in cursor.fetchall()[0][2]
         self.enable_cache = settings('enableTextureCache.bool')
         self.queue = Queue.Queue()
         self.thread_limit = 1 if settings('lowPowered.bool') else 2
