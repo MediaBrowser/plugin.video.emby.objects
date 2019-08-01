@@ -263,6 +263,7 @@ class Movies(KodiDb):
         obj = self.objects.map(item, 'Boxset')
 
         obj['Overview'] = API.get_overview(obj['Overview'])
+        obj['Checksum'] = obj['Etag']
 
         try:
             obj['SetId'] = e_item[0]
