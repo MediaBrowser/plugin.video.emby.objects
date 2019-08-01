@@ -360,17 +360,8 @@ class Music(KodiDb):
             obj['Path'] = obj['Path'].replace(obj['Filename'], "")
 
         else:
-            obj['Path'] = "%s/emby/Audio/%s/" % (self.server['auth/server-address'], obj['Id'])
+            obj['Path'] = "http://127.0.0.1:57578/emby/Audio/%s/" % obj['Id'] # use redirect to append api_key
             obj['Filename'] = "stream.%s" % obj['Container']
-            """
-            obj['Path'] = "http://127.0.0.1:57578/emby/kodi/music/"
-            params = {
-                'Name': obj['Filename'].encode('utf-8'),
-                'KodiId': obj['SongId'],
-                'Id': obj['Id']
-            }
-            obj['Filename'] = "%s/file.strm?%s" % (obj['Id'], urllib.urlencode(params))
-            """
 
         return True
 

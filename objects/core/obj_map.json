@@ -61,7 +61,8 @@
 		"Id": "Id",
 		"Title": "Name",
 		"Overview": "Overview",
-		"PresentationKey": "PresentationUniqueKey"
+		"PresentationKey": "PresentationUniqueKey",
+		"Etag": "Etag"
 	},
 	"SeriesProviderName": "tvdb",
 	"Series": {
