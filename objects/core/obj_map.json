@@ -44,7 +44,8 @@
 		"Container": "MediaSources/0/Container",
 		"EmbyParentId": "ParentId",
 		"CriticRating": "CriticRating",
-		"PresentationKey": "PresentationUniqueKey"
+		"PresentationKey": "PresentationUniqueKey",
+		"OriginalTitle": "OriginalTitle"
 	},
 	"MovieUserData": {
 		"Id": "Id",
@@ -86,7 +87,8 @@
 		"RecursiveCount": "RecursiveItemCount",
 		"EmbyParentId": "ParentId",
 		"Status": "Status",
-		"PresentationKey": "PresentationUniqueKey"
+		"PresentationKey": "PresentationUniqueKey",
+		"OriginalTitle": "OriginalTitle"
 	},
 	"Season": {
 		"Id": "Id",
@@ -129,7 +131,8 @@
 		"Container": "MediaSources/0/Container",
 		"Location": "LocationType",
 		"EmbyParentId": "SeriesId,ParentId",
-		"PresentationKey": "PresentationUniqueKey"
+		"PresentationKey": "PresentationUniqueKey",
+		"OriginalTitle": "OriginalTitle"
 	},
 	"EpisodeUserData": {
 		"Id": "Id",
@@ -320,7 +323,8 @@
 		"RecursiveCount": "RecursiveItemCount",
 		"MediaType": "MediaType",
 		"CriticRating": "CriticRating",
-		"Status": "Status"
+		"Status": "Status",
+		"OriginalTitle": "OriginalTitle"
 	},
 	"BrowseAudio": {
 		"Id": "Id",
