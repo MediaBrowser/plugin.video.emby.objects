@@ -113,8 +113,7 @@ class Objects(object):
 
             self.mapped_item['ProviderName'] = self.objects.get('%sProviderName' % mapping_name)
             self.mapped_item['Checksum'] = json.dumps(item['UserData'])
-
-        self.mapped_item.setdefault('PresentationKey', None)
+            self.mapped_item.setdefault('PresentationKey', None)
 
         return self.mapped_item
 
