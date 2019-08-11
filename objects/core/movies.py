@@ -165,7 +165,7 @@ class Movies(KodiDb):
         self.add_ratings(*values(obj, QU.add_rating_movie_obj))
 
         if obj['CriticRating'] is not None:
-            self.add_ratings(*values(dict(obj, RatingId=self.create_entry_rating(), RatingType="rottentomatoes", Rating=float(obj['CriticRating']/10.0)), QU.add_rating_movie_obj))
+            self.add_ratings(*values(dict(obj, RatingId=self.create_entry_rating(), RatingType="tomatometerallcritics", Rating=float(obj['CriticRating']/10.0)), QU.add_rating_movie_obj))
 
         obj['Unique'] = self.create_entry_unique_id()
         self.add_unique_id(*values(obj, QU.add_unique_id_movie_obj))
@@ -187,7 +187,7 @@ class Movies(KodiDb):
 
         if obj['CriticRating'] is not None:
 
-            temp_obj = dict(obj, RatingType="rottentomatoes", Rating=float(obj['CriticRating']/10.0))
+            temp_obj = dict(obj, RatingType="tomatometerallcritics", Rating=float(obj['CriticRating']/10.0))
             temp_obj['RatingId'] = self.get_rating_id(*values(temp_obj, QU.get_rating_movie_obj))
             self.update_ratings(*values(temp_obj, QU.update_rating_movie_obj))
 
