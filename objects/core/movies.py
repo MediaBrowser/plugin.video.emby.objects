@@ -61,32 +61,31 @@ class Movies(KodiDb):
         obj['LibraryId'] = library['Id']
         obj['LibraryName'] = library['Name']
         update = True
+        verify = False
+
+        if obj['PresentationKey']: # 4.2.0.23+
+
+            verify = True
+            obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
+
+        elif not self.update_library: # older server
+
+            verify = True
+            obj['Item']['Id'] = self.server['api'].is_valid_movie(obj['LibraryId'], obj['Title'], obj['Id'])
+
+        if verify:
+            if str(obj['Item']['Id']) != obj['Id']:
+
+                LOG.info("Skipping stacked movie %s [%s/%s]", obj['Title'], obj['Item']['Id'], obj['Id'])
+                Movies(self.server, self.emby, self.video, self.direct_path, False).remove(obj['Id'])
+
+                return False
 
         try:
             obj['MovieId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
         except TypeError as error:
-            verify = False
-
-            if obj['PresentationKey']: # 4.2.0.23+
-
-                verify = True
-                obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
-
-            elif not self.update_library: # older server
-
-                verify = True
-                obj['Item']['Id'] = self.server['api'].is_valid_movie(obj['LibraryId'], obj['Title'], obj['Id'])
-
-            if verify:
-                if str(obj['Item']['Id']) != obj['Id']:
-
-                    LOG.info("Skipping stacked movie %s [%s/%s]", obj['Title'], obj['Item']['Id'], obj['Id'])
-                    Movies(self.server, self.emby, self.video, self.direct_path, False).remove(obj['Id']) 
-
-                    return False
-
             update = False
             LOG.debug("MovieId %s not found", obj['Id'])
             obj['MovieId'] = self.create_entry()
