@@ -79,29 +79,28 @@ class TVShows(KodiDb):
 
             return False
 
+        if pooling is None:
+            verify = False
+
+            if obj['PresentationKey']: # 4.2.0.23+
+
+                verify = True
+                obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
+
+            elif not self.update_library: # older server
+
+                verify = True
+                obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
+
+            if verify:
+
+                if str(obj['Item']['Id']) != obj['Id']:
+                    return TVShows(self.server, self.emby, self.video, self.direct_path, False).tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
+
         try:
             obj['ShowId'] = e_item[0]
             obj['PathId'] = e_item[2]
         except TypeError as error:
-
-            if pooling is None:
-                verify = False
-
-                if obj['PresentationKey']: # 4.2.0.23+
-
-                    verify = True
-                    obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
-
-                elif not self.update_library: # older server
-
-                    verify = True
-                    obj['Item']['Id'] = self.server['api'].is_valid_series(obj['LibraryId'], obj['Title'], obj['Id'])
-
-                if verify:
-
-                    if str(obj['Item']['Id']) != obj['Id']:
-                        return TVShows(self.server, self.emby, self.video, self.direct_path, False).tvshow(obj['Item'], library=obj['Library'], pooling=obj['Id'])
-
             update = False
             LOG.debug("ShowId %s not found", obj['Id'])
             obj['ShowId'] = self.create_entry()
@@ -304,6 +303,7 @@ class TVShows(KodiDb):
         obj = self.objects.map(item, 'Episode')
         obj['Item'] = item
         update = True
+        verify = False
 
         if obj['Location'] == 'Virtual':
             LOG.info("Skipping virtual episode %s: %s", obj['Title'], obj['Id'])
@@ -315,31 +315,29 @@ class TVShows(KodiDb):
 
             return
 
+        if obj['PresentationKey']: # 4.2.0.23+
+
+            verify = True
+            obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
+
+        elif not self.update_library: # older server
+
+            verify = True
+            obj['Item']['Id'] = self.server['api'].is_valid_episode(obj['SeriesId'], obj['Title'], obj['Id'])
+
+        if verify:
+            if str(obj['Item']['Id']) != obj['Id']:
+
+                LOG.info("Skipping stacked episode %s [%s]", obj['Title'], obj['Id'])
+                TVShows(self.server, self.emby, self.video, self.direct_path, False).remove(obj['Id'])
+
+                return False
+
         try:
             obj['EpisodeId'] = e_item[0]
             obj['FileId'] = e_item[1]
             obj['PathId'] = e_item[2]
         except TypeError as error:
-            verify = False
-
-            if obj['PresentationKey']: # 4.2.0.23+
-
-                verify = True
-                obj['Item']['Id'] = self.emby_db.get_stack(obj['PresentationKey']) or obj['Id']
-
-            elif not self.update_library: # older server
-
-                verify = True
-                obj['Item']['Id'] = self.server['api'].is_valid_episode(obj['SeriesId'], obj['Title'], obj['Id'])
-
-            if verify:
-                if str(obj['Item']['Id']) != obj['Id']:
-
-                    LOG.info("Skipping stacked episode %s [%s]", obj['Title'], obj['Id'])
-                    TVShows(self.server, self.emby, self.video, self.direct_path, False).remove(obj['Id'])
-
-                    return False
-
             update = False
             LOG.debug("EpisodeId %s not found", obj['Id'])
             obj['EpisodeId'] = self.create_entry_episode()
