@@ -493,7 +493,7 @@ class Episode(Video):
 
         metadata = {
             'title': self['Title'],
-            'originaltitle': self['Title'],
+            'originaltitle': self['OriginalTitle'],
             'sorttitle': self['SortTitle'],
             'country': self['Countries'],
             'genre': self['Genres'],
@@ -612,7 +612,7 @@ class Series(Video):
 
         metadata = {
             'title': self['Title'],
-            'originaltitle': self['Title'],
+            'originaltitle': self['OriginalTitle'],
             'sorttitle': self['SortTitle'],
             'country': self['Countries'],
             'genre': self['Genres'],
@@ -662,7 +662,7 @@ class Movie(Video):
 
         metadata = {
             'title': self['Title'],
-            'originaltitle': self['Title'],
+            'originaltitle': self['OriginalTitle'],
             'sorttitle': self['SortTitle'],
             'country': self['Countries'],
             'genre': self['Genres'],
