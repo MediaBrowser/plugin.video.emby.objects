@@ -2,6 +2,7 @@
     "17.*": {
         "desc": "Krypton objects",
         "objects": [
+            "171076071-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076071.zip",
             "171076070-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076070.zip",
             "171076068-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076068.zip",
             "171076064-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076064.zip",
@@ -13,6 +14,7 @@
     "beta-17.*": {
         "desc": "Krypton objects (beta)",
         "objects": [
+            "171076071-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076071.zip",
             "171076070-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076070.zip",
             "171076068-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076068.zip",
             "171076064-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076064.zip",
@@ -30,6 +32,7 @@
     "18.*": {
         "desc": "Leia objects",
         "objects": [
+            "181167258-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167258.zip",
             "181167257-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167257.zip",
             "181167255-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167255.zip",
             "181167251-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167251.zip",
@@ -41,6 +44,7 @@
     "beta-18.*": {
         "desc": "Leia objects (beta)",
         "objects": [
+            "181167258-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167258.zip",
             "181167257-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167257.zip",
             "181167255-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167255.zip",
             "181167251-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167251.zip",
@@ -57,6 +61,7 @@
     "19.*": {
         "desc": "Matrix objects",
         "objects": [
+            "181167258-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167258.zip",
             "181167257-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167257.zip",
             "181167255-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167255.zip",
             "181167251-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167251.zip",
@@ -68,6 +73,7 @@
     "beta-19.*": {
         "desc": "Matrix objects (beta)",
         "objects": [
+            "181167258-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167258.zip",
             "181167257-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167257.zip",
             "181167255-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167255.zip",
             "181167251-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167251.zip",
