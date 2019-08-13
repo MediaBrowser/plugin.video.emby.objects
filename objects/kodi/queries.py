@@ -301,7 +301,7 @@ add_movie =     		"""	INSERT INTO	movie(idMovie, idFile, c00, c01, c02, c03, c04
                 		"""
 add_movie_obj =             [   "{MovieId}","{FileId}","{Title}","{Plot}","{ShortPlot}","{Tagline}",
                                 "{Votes}","{RatingId}","{Writers}","{Year}","{Unique}","{SortTitle}",
-                                "{Runtime}","{Mpaa}","{Genre}","{Directors}","{Title}","{Studio}",
+                                "{Runtime}","{Mpaa}","{Genre}","{Directors}","{OriginalTitle}","{Studio}",
                                 "{Trailer}","{Country}","{CriticRating}","{Premiered}"
                             ]
 add_rating =    		"""	INSERT INTO rating(rating_id, media_id, media_type, rating_type, rating, votes) 
@@ -340,7 +340,7 @@ add_musicvideo_obj =        [   "{MvideoId}","{FileId}","{Title}","{Runtime}","{
 add_tvshow =    		""" INSERT INTO	tvshow(idShow, c00, c01, c02, c04, c05, c08, c09, c10, c12, c13, c14, c15) 
             				VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
             			"""
-add_tvshow_obj =            [   "{ShowId}","{Title}","{Plot}","{Status}","{RatingId}","{Premiere}","{Genre}","{Title}",
+add_tvshow_obj =            [   "{ShowId}","{Title}","{Plot}","{Status}","{RatingId}","{Premiere}","{Genre}","{OriginalTitle}",
                                 "disintegrate browse bug", "{Unique}","{Mpaa}","{Studio}","{SortTitle}"
                             ]
 add_season =    		"""	INSERT INTO seasons(idSeason, idShow, season) 
@@ -351,7 +351,7 @@ add_episode =   		"""	INSERT INTO episode(idEpisode, idFile, c00, c01, c03, c04,
                 			VALUES 		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
                 		"""
 add_episode_obj =           [   "{EpisodeId}","{FileId}","{Title}","{Plot}","{RatingId}","{Writers}","{Premiere}","{Runtime}",
-                                "{Directors}","{Season}","{Index}","{Title}","{ShowId}","{AirsBeforeSeason}",
+                                "{Directors}","{Season}","{Index}","{OriginalTitle}","{ShowId}","{AirsBeforeSeason}",
                                 "{AirsBeforeEpisode}","{SeasonId}"
                             ]                        
 add_art =   			"""	INSERT INTO art(media_id, media_type, type, url) 
@@ -414,7 +414,7 @@ update_movie =  		"""	UPDATE 	movie
                 		"""
 update_movie_obj =          [   "{Title}","{Plot}","{ShortPlot}","{Tagline}","{Votes}","{RatingId}",
                                 "{Writers}","{Year}","{Unique}","{SortTitle}","{Runtime}",
-                                "{Mpaa}","{Genre}","{Directors}","{Title}","{Studio}","{Trailer}",
+                                "{Mpaa}","{Genre}","{Directors}","{OriginalTitle}","{Studio}","{Trailer}",
                                 "{Country}","{CriticRating}","{Premiered}","{MovieId}"
                             ]
 update_rating =     	"""	UPDATE 	rating 
@@ -467,7 +467,7 @@ update_tvshow =     	""" UPDATE 	tvshow
                 					c12 = ?, c13 = ?, c14 = ?, c15 = ? 
             				WHERE 	idShow = ? 
             			"""
-update_tvshow_obj =         [   "{Title}","{Plot}","{Status}","{RatingId}","{Premiere}","{Genre}","{Title}",
+update_tvshow_obj =         [   "{Title}","{Plot}","{Status}","{RatingId}","{Premiere}","{Genre}","{OriginalTitle}",
                                 "disintegrate browse bug","{Unique}","{Mpaa}","{Studio}","{SortTitle}","{ShowId}"
                             ]
 update_tvshow_link =   	"""	INSERT OR REPLACE INTO	tvshowlinkpath(idShow, idPath) 
@@ -485,7 +485,7 @@ update_episode =    	""" UPDATE 	episode
             				WHERE 	idEpisode = ? 
             			"""
 update_episode_obj =        [   "{Title}","{Plot}","{RatingId}","{Writers}","{Premiere}","{Runtime}","{Directors}",
-                                "{Season}","{Index}","{Title}","{AirsBeforeSeason}","{AirsBeforeEpisode}","{SeasonId}",
+                                "{Season}","{Index}","{OriginalTitle}","{AirsBeforeSeason}","{AirsBeforeEpisode}","{SeasonId}",
                                 "{ShowId}","{EpisodeId}"
                             ]
 update_settings = 		""" INSERT OR REPLACE INTO settings(idFile, Deinterlace, ViewMode, ZoomAmount, PixelRatio,
