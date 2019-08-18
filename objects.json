@@ -32,7 +32,7 @@
     "18.*": {
         "desc": "Leia objects",
         "objects": [
-            "181167258-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167258.zip",
+            "181167259-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167259.zip",
             "181167257-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167257.zip",
             "181167255-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167255.zip",
             "181167251-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167251.zip",
@@ -44,7 +44,7 @@
     "beta-18.*": {
         "desc": "Leia objects (beta)",
         "objects": [
-            "181167258-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167258.zip",
+            "181167259-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167259.zip",
             "181167257-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167257.zip",
             "181167255-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167255.zip",
             "181167251-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167251.zip",
@@ -61,7 +61,7 @@
     "19.*": {
         "desc": "Matrix objects",
         "objects": [
-            "181167258-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167258.zip",
+            "181167259-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167259.zip",
             "181167257-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167257.zip",
             "181167255-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167255.zip",
             "181167251-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167251.zip",
@@ -73,7 +73,7 @@
     "beta-19.*": {
         "desc": "Matrix objects (beta)",
         "objects": [
-            "181167258-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167258.zip",
+            "181167259-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167259.zip",
             "181167257-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167257.zip",
             "181167255-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167255.zip",
             "181167251-4.1.5-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/181167251.zip",
