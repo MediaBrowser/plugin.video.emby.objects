@@ -5,7 +5,6 @@
 import binascii
 import json
 import logging
-from datetime import datetime
 
 import xbmc
 
@@ -184,9 +183,6 @@ class Monitor(monitor.Monitor):
             self.playlistid = data['playlistid']
 
         LOG.info(data)
-        if not window('emby.playlist.start'):
-            window('emby.playlist.add.event', datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"))
-
         if window('emby.playlist.start') and data['position'] == int(window('emby.playlist.start')) + 1:
 
             LOG.info("--[ playlist ready ]")
