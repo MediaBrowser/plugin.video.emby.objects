@@ -183,7 +183,7 @@ class Monitor(monitor.Monitor):
             self.playlistid = data['playlistid']
 
         LOG.info(data)
-        if window('emby.playlist.start') and data['position'] == int(window('emby.playlist.start')) + 1:
+        if data['playlistid'] and window('emby.playlist.start') and data['position'] == int(window('emby.playlist.start')):
 
             LOG.info("--[ playlist ready ]")
             window('emby.playlist.ready.bool', True)

@@ -76,22 +76,46 @@ class PlayPlugin(Play):
 
         LOG.info("[ play/%s/%s ]", self.info['Id'], self.info['Index'])
 
-        if window('emby.playlist.audio.bool'):
+        if window('emby.playlist.audio.bool'): # fool kodi with a dummy entry to mask can't find next in playlist
             relaunch = True
+            music_playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
+            music_playlist.add(url="", listitem=xbmcgui.ListItem(), index=max(music_playlist.getposition(), 0) + 1)
+            self.info['Index'] = self.info['StartIndex']
+
+        window('emby.playlist.start', str(self.info['Index']))
 
         listitem = xbmcgui.ListItem()
         self._set_playlist(listitem)
 
-        try:
-            xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
-        except Exception:
-            pass
+        count = 20
 
-        if relaunch or max(self.info['KodiPlaylist'].getposition(), 0) == self.info['StartIndex']:
-            self.start_playback(self.info['StartIndex'])
+        if xbmc.getCondVisibility('VideoPlayer.Content(livetv)'):
+            xbmc.Player().stop()
+
+        while not window('emby.playlist.ready.bool'):
+            xbmc.sleep(50)
+
+            if not count:
+                LOG.info("[ playback aborted ]")
+
+                raise Exception("PlaybackAborted")
+
+            count -= 1
         else:
-            xbmc.sleep(1000)
-            self.remove_from_playlist(self.info['StartIndex'])
+            try:
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
+            except Exception:
+                pass
+
+            if relaunch:
+                xbmc.sleep(250) # delay because of the false setResolvedUrl trying to stop playback
+                self.start_playback(self.info['StartIndex'])
+                music_playlist.clear()
+            else:
+                xbmc.sleep(2000)
+                self.remove_from_playlist(self.info['StartIndex'])
+
+        return self.info['Index']
 
     def _set_playlist(self, listitem):
 
