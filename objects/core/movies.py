@@ -168,6 +168,15 @@ class Movies(KodiDb):
         obj['Unique'] = self.create_entry_unique_id()
         self.add_unique_id(*values(obj, QU.add_unique_id_movie_obj))
 
+        for provider in obj['UniqueIds'] or {}:
+
+            unique_id = obj['UniqueIds'][provider]
+            provider = provider.lower()
+
+            if provider != 'imdb':
+                temp_obj = dict(obj, ProviderName=provider, UniqueId=unique_id, Unique=self.create_entry_unique_id())
+                self.add_unique_id(*values(temp_obj, QU.add_unique_id_movie_obj))
+
         obj['PathId'] = self.add_path(*values(obj, QU.add_path_obj))
         obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
 
@@ -189,8 +198,19 @@ class Movies(KodiDb):
             temp_obj['RatingId'] = self.get_rating_id(*values(temp_obj, QU.get_rating_movie_obj))
             self.update_ratings(*values(temp_obj, QU.update_rating_movie_obj))
 
-        obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_movie_obj))
-        self.update_unique_id(*values(obj, QU.update_unique_id_movie_obj))
+        self.remove_unique_ids(*values(obj, QU.delete_unique_ids_movie_obj))
+        
+        obj['Unique'] = self.create_entry_unique_id()
+        self.add_unique_id(*values(obj, QU.add_unique_id_movie_obj))
+
+        for provider in obj['UniqueIds'] or {}:
+
+            unique_id = obj['UniqueIds'][provider]
+            provider = provider.lower()
+
+            if provider != 'imdb':
+                temp_obj = dict(obj, ProviderName=provider, UniqueId=unique_id, Unique=self.create_entry_unique_id())
+                self.add_unique_id(*values(temp_obj, QU.add_unique_id_movie_obj))
 
         self.update(*values(obj, QU.update_movie_obj))
         self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))

@@ -330,3 +330,9 @@ class Kodi(object):
         ''' Update rating by rating_id.
         '''
         self.cursor.execute(QU.update_rating, args)
+
+    def remove_unique_ids(self, *args):
+
+        ''' Remove all unique ids associated.
+        '''
+        self.cursor.execute(QU.delete_unique_ids, args)

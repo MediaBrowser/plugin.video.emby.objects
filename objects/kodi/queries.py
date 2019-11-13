@@ -584,3 +584,13 @@ delete_backdrops =  	"""	DELETE FROM	art
 delete_artwork = 		""" DELETE FROM art 
 							WHERE 		url = ?
 						"""
+delete_unique_ids =     """	DELETE FROM	uniqueid 
+							WHERE		media_id = ? 
+							AND 		media_type = ?
+						"""
+delete_unique_ids_movie_obj = 	[   "{MovieId}", "movie"
+                            	]
+delete_unique_ids_tvshow_obj = 	[   "{ShowId}", "tvshow"
+                            	]
+delete_unique_ids_episode_obj = [   "{EpisodeId}", "episode"
+                            	]
