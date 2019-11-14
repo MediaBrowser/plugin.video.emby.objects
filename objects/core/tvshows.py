@@ -210,6 +210,15 @@ class TVShows(KodiDb):
         obj['Unique'] = self.create_entry_unique_id()
         self.add_unique_id(*values(obj, QU.add_unique_id_tvshow_obj))
 
+        for provider in obj['UniqueIds'] or {}:
+
+            unique_id = obj['UniqueIds'][provider]
+            provider = provider.lower()
+
+            if provider != 'tvdb':
+                temp_obj = dict(obj, ProviderName=provider, UniqueId=unique_id, Unique=self.create_entry_unique_id())
+                self.add_unique_id(*values(temp_obj, QU.add_unique_id_tvshow_obj))
+
         obj['TopPathId'] = self.add_path(obj['TopLevel'])
         self.update_path(*values(obj, QU.update_path_toptvshow_obj))
 
@@ -226,8 +235,19 @@ class TVShows(KodiDb):
         obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_tvshow_obj))
         self.update_ratings(*values(obj, QU.update_rating_tvshow_obj))
 
-        obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_tvshow_obj))
-        self.update_unique_id(*values(obj, QU.update_unique_id_tvshow_obj))
+        self.remove_unique_ids(*values(obj, QU.delete_unique_ids_tvshow_obj))
+
+        obj['Unique'] = self.create_entry_unique_id()
+        self.add_unique_id(*values(obj, QU.add_unique_id_tvshow_obj))
+
+        for provider in obj['UniqueIds'] or {}:
+
+            unique_id = obj['UniqueIds'][provider]
+            provider = provider.lower()
+
+            if provider != 'tvdb':
+                temp_obj = dict(obj, ProviderName=provider, UniqueId=unique_id, Unique=self.create_entry_unique_id())
+                self.add_unique_id(*values(temp_obj, QU.add_unique_id_tvshow_obj))
 
         self.update(*values(obj, QU.update_tvshow_obj))
         self.emby_db.update_reference(*values(obj, QUEM.update_reference_obj))
@@ -418,11 +438,20 @@ class TVShows(KodiDb):
         
         ''' Add object to kodi.
         '''
-        obj['RatingId'] =  self.create_entry_rating()
+        obj['RatingId'] = self.create_entry_rating()
         self.add_ratings(*values(obj, QU.add_rating_episode_obj))
 
-        obj['Unique'] =  self.create_entry_unique_id()
+        obj['Unique'] = self.create_entry_unique_id()
         self.add_unique_id(*values(obj, QU.add_unique_id_episode_obj))
+
+        for provider in obj['UniqueIds'] or {}:
+
+            unique_id = obj['UniqueIds'][provider]
+            provider = provider.lower()
+
+            if provider != 'tvdb':
+                temp_obj = dict(obj, ProviderName=provider, UniqueId=unique_id, Unique=self.create_entry_unique_id())
+                self.add_unique_id(*values(temp_obj, QU.add_unique_id_episode_obj))
 
         obj['PathId'] = self.add_path(*values(obj, QU.add_path_obj))
         obj['FileId'] = self.add_file(*values(obj, QU.add_file_obj))
@@ -446,8 +475,19 @@ class TVShows(KodiDb):
         obj['RatingId'] = self.get_rating_id(*values(obj, QU.get_rating_episode_obj))
         self.update_ratings(*values(obj, QU.update_rating_episode_obj))
 
-        obj['Unique'] = self.get_unique_id(*values(obj, QU.get_unique_id_episode_obj))
-        self.update_unique_id(*values(obj, QU.update_unique_id_episode_obj))
+        self.remove_unique_ids(*values(obj, QU.delete_unique_ids_episode_obj))
+
+        obj['Unique'] = self.create_entry_unique_id()
+        self.add_unique_id(*values(obj, QU.add_unique_id_episode_obj))
+
+        for provider in obj['UniqueIds'] or {}:
+
+            unique_id = obj['UniqueIds'][provider]
+            provider = provider.lower()
+
+            if provider != 'tvdb':
+                temp_obj = dict(obj, ProviderName=provider, UniqueId=unique_id, Unique=self.create_entry_unique_id())
+                self.add_unique_id(*values(temp_obj, QU.add_unique_id_episode_obj))
 
         self.update_episode(*values(obj, QU.update_episode_obj))
 
