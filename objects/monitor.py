@@ -76,18 +76,21 @@ class Monitor(monitor.Monitor):
         
         ''' Setup progress for emby playback.
         '''
-        player = xbmc.Player()
+        if not self.player.is_ready():
+            LOG.info("player is not ready for onplay property")
+
+            return
 
         try:
             kodi_id = None
 
-            if player.isPlayingVideo():
+            if self.player.isPlayingVideo():
 
                 ''' Seems to misbehave when playback is not terminated prior to playing new content.
                     The kodi id remains that of the previous title. Maybe onPlay happens before
                     this information is updated. Added a failsafe further below.
                 '''
-                item = player.getVideoInfoTag()
+                item = self.player.getVideoInfoTag()
                 kodi_id = item.getDbId()
                 media = item.getMediaType()
 
@@ -98,6 +101,7 @@ class Monitor(monitor.Monitor):
                 media = item['type']
 
             LOG.info(" [ play ] kodi_id: %s media: %s", kodi_id, media)
+            self.player.ready = False
 
         except (KeyError, TypeError):
             LOG.debug("Invalid playstate update")
@@ -110,7 +114,7 @@ class Monitor(monitor.Monitor):
             if item:
 
                 try:
-                    file = player.getPlayingFile()
+                    file = self.player.getPlayingFile()
                 except Exception as error:
                     LOG.error(error)
 
