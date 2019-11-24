@@ -21,6 +21,7 @@ class Player(player.Player):
 
     played = {}
     up_next = False
+    ready = False
 
     def __init__(self, monitor=None):
 
@@ -75,6 +76,9 @@ class Player(player.Player):
     def get_total_time(self):
         return int(self.getTotalTime())
 
+    def is_ready(self):
+        return self.ready
+
     def set_audio_stream(self, index):
         self.setAudioStream(int(index))
 
@@ -106,6 +110,7 @@ class Player(player.Player):
     def onPlayBackStarted(self):
 
         LOG.info("[ onPlayBackStarted ]")
+        self.ready = True
         self.up_next = False
 
         try:
