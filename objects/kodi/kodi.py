@@ -137,6 +137,13 @@ class Kodi(object):
         cast_order = 1
 
         for person in people:
+
+            if 'Name' not in person:
+                LOG.error("Unable to identify person object")
+                LOG.error(person)
+
+                continue
+
             person_id = self.get_person(person['Name'])
 
             if person['Type'] == 'Actor':
