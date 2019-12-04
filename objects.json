@@ -2,7 +2,7 @@
     "17.*": {
         "desc": "Krypton objects",
         "objects": [
-            "171076072-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076072.zip",
+            "171076073-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076073.zip",
             "171076071-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076071.zip",
             "171076070-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076070.zip",
             "171076068-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076068.zip",
@@ -15,7 +15,7 @@
     "beta-17.*": {
         "desc": "Krypton objects (beta)",
         "objects": [
-            "171076072-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076072.zip",
+            "171076073-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076073.zip",
             "171076071-4.1.13-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076071.zip",
             "171076070-4.1.11-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076070.zip",
             "171076068-4.1.9-https://github.com/MediaBrowser/plugin.video.emby.objects/archive/171076068.zip",
