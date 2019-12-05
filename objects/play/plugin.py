@@ -68,20 +68,13 @@ class PlayPlugin(Play):
         self.info['KodiPlaylist'] = self.set_playlist()
 
         if clear_playlist:
+
+            LOG.info("[ clear playlist ]")
             self.info['KodiPlaylist'].clear()
 
         self.info['StartIndex'] = max(self.info['KodiPlaylist'].getposition(), 0)
-        self.info['Index'] = self.info['StartIndex'] + 1
-        relaunch = False
-
+        self.info['Index'] = self.info['StartIndex'] + int(not clear_playlist)
         LOG.info("[ play/%s/%s ]", self.info['Id'], self.info['Index'])
-
-        if window('emby.playlist.audio.bool'): # fool kodi with a dummy entry to mask can't find next in playlist
-            relaunch = True
-            music_playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
-            music_playlist.add(url="", listitem=xbmcgui.ListItem(), index=max(music_playlist.getposition(), 0) + 1)
-            self.info['Index'] = self.info['StartIndex']
-
         window('emby.playlist.start', str(self.info['Index']))
 
         listitem = xbmcgui.ListItem()
@@ -107,10 +100,9 @@ class PlayPlugin(Play):
             except Exception:
                 pass
 
-            if relaunch:
-                xbmc.sleep(250) # delay because of the false setResolvedUrl trying to stop playback
+            if clear_playlist:
+                xbmc.sleep(250) #delay because of the false setResolvedUrl
                 self.start_playback(self.info['StartIndex'])
-                music_playlist.clear()
             else:
                 xbmc.sleep(2000)
                 self.remove_from_playlist(self.info['StartIndex'])
