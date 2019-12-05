@@ -179,11 +179,12 @@ class Monitor(monitor.Monitor):
                 LOG.info("[ reset autoplay ]")
                 window('emby.autoplay', clear=True)
 
+            """
             if data['playlistid'] == 0:
                 window('emby.playlist.audio.bool', True)
             elif self.playlistid != 0: # If the audio was relaunched.
                 window('emby.playlist.audio', clear=True)
-
+            """
             self.playlistid = data['playlistid']
 
         LOG.info(data)
