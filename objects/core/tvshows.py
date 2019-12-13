@@ -682,18 +682,21 @@ class TVShows(KodiDb):
         
         self.artwork.delete(kodi_id, "tvshow")
         self.delete_tvshow(kodi_id)
+        self.emby_db.remove_item_by_kodi_id(kodi_id, "tvshow")
         LOG.info("DELETE tvshow [%s] %s", kodi_id, item_id)
 
     def remove_season(self, kodi_id, item_id):
 
         self.artwork.delete(kodi_id, "season")
         self.delete_season(kodi_id)
+        self.emby_db.remove_item_by_kodi_id(kodi_id, "season")
         LOG.info("DELETE season [%s] %s", kodi_id, item_id)
 
     def remove_episode(self, kodi_id, file_id, item_id):
 
         self.artwork.delete(kodi_id, "episode")
         self.delete_episode(kodi_id, file_id)
+        self.emby_db.remove_item_by_kodi_id(kodi_id, "episode")
         LOG.info("DELETE episode [%s/%s] %s", file_id, kodi_id, item_id)
 
     @emby_item()
