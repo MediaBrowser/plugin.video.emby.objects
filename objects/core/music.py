@@ -481,7 +481,7 @@ class Music(KodiDb):
         if obj['Media'] == 'song':
 
             self.remove_song(obj['KodiId'], obj['Id'])
-            self.emby_db.remove_wild_item(obj['id'])
+            self.emby_db.remove_wild_item(obj['Id'])
 
             for item in self.emby_get_item_by_wild_id(*values(obj, QUEM.get_item_by_wild_obj)):
                 if item[1] == 'album':
