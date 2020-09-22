@@ -68,7 +68,6 @@ class PlayPlugin(Play):
         self.info['KodiPlaylist'] = self.set_playlist()
 
         if clear_playlist:
-
             LOG.info("[ clear playlist ]")
             self.info['KodiPlaylist'].clear()
 
@@ -78,34 +77,25 @@ class PlayPlugin(Play):
         window('emby.playlist.start', str(self.info['Index']))
 
         listitem = xbmcgui.ListItem()
-        self._set_playlist(listitem)
-
-        count = 20
+        StreamURL = self._set_playlist(listitem)
 
         if xbmc.getCondVisibility('VideoPlayer.Content(livetv)'):
             xbmc.Player().stop()
 
-        while not window('emby.playlist.ready.bool'):
-            xbmc.sleep(50)
+        try:
+            if StreamURL: #Playlist
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, xbmcgui.ListItem(path = StreamURL))
+            else: #Single Item
+                xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, xbmcgui.ListItem())
+        except Exception:
+            pass
 
-            if not count:
-                LOG.info("[ playback aborted ]")
-
-                raise Exception("PlaybackAborted")
-
-            count -= 1
+        if clear_playlist:
+            xbmc.sleep(250) #delay because of the false setResolvedUrl
+            self.start_playback(self.info['StartIndex'])
         else:
-            try:
-                xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, xbmcgui.ListItem())
-            except Exception:
-                pass
-
-            if clear_playlist:
-                xbmc.sleep(250) #delay because of the false setResolvedUrl
-                self.start_playback(self.info['StartIndex'])
-            else:
-                xbmc.sleep(2000)
-                self.remove_from_playlist(self.info['StartIndex'])
+            xbmc.sleep(2000)
+            self.remove_from_playlist(self.info['StartIndex'])
 
         return self.info['Index']
 
@@ -136,11 +126,16 @@ class PlayPlugin(Play):
         listitem.setPath(self.info['Item']['PlaybackInfo']['Path'])
         playutils.set_properties(self.info['Item'], self.info['Item']['PlaybackInfo']['Method'], self.info['ServerId'])
 
-        self.add_listitem(self.info['Item']['PlaybackInfo']['Path'], listitem, self.info['Index'])
-        self.info['Index'] += 1
+        #if playlist empty, add item (required if not "kodi autoplay next episode etc." enabled)
+        if xbmc.PlayList(xbmc.PLAYLIST_VIDEO).size() != 1:
+            StreamURL = self.info['Item']['PlaybackInfo']['Path']
+        else:
+            StreamURL = None
 
         if self.info['Item'].get('PartCount'):
             self.set_additional_parts()
+
+        return StreamURL
 
     def set_intros(self):
 
