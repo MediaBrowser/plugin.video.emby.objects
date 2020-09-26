@@ -643,7 +643,6 @@ class TVShows(KodiDb):
             obj['ParentId'] = obj['KodiId']
 
             for season in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_season_obj)):
-                
                 temp_obj = dict(obj)
                 temp_obj['ParentId'] = season[1]
 
@@ -657,6 +656,7 @@ class TVShows(KodiDb):
             self.remove_tvshow(obj['KodiId'], obj['Id'])
 
         elif obj['Media'] == 'season':
+            obj['ParentId'] = obj['KodiId']
 
             for episode in self.emby_db.get_item_by_parent_id(*values(obj, QUEM.get_item_by_parent_episode_obj)):
                 self.remove_episode(episode[1], episode[2], obj['Id'])
