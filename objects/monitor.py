@@ -133,6 +133,10 @@ class Monitor(monitor.Monitor):
         try:
             kodi_id = data['item']['id']
             media = data['item']['type']
+
+            if media == "season" or media == "tvshow":
+                return
+
             playcount = int(data.get('playcount', 0))
             LOG.info(" [ update/%s ] kodi_id: %s media: %s", playcount, kodi_id, media)
         except (KeyError, TypeError):
